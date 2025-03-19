@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624278310110",
+    "project_id": "mymyko-ce0e7",
+    "storage_bucket": "mymyko-ce0e7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624278310110:android:f7f6edd275b90a2942864f",
+        "android_client_info": {
+          "package_name": "com.example.mymyko"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLwK3vQx0BIUh1ITfMLuLuhpmHAurEob8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

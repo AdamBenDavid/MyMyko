@@ -1,0 +1,37 @@
+<resources>
+  <color name="card_background">#B3E5FC</color> <!-- Light Blue for Card Background -->
+  <color name="my_Light_primary">#81D4FA</color> <!-- Light Sky Blue Primary -->
+
+  <color name="title_color">#01579B</color> <!-- Deep Blue for Titles -->
+  <color name="text_primary">#0277BD</color> <!-- Strong Blue for Primary Text -->
+  <color name="button_text_color">#FFFFFF</color> <!-- White for Button Text -->
+
+  <color name="button_color">#0288D1</color> <!-- Ocean Blue for Primary Buttons -->
+  <color name="secondary_button_color">#29B6F6</color> <!-- Lighter Blue for Secondary Buttons -->
+
+  <color name="nav_icon_tint">#0288D1</color> <!-- Blue for Navigation Icons -->
+  <color name="nav_text_tint">#03A9F4</color> <!-- Light Blue for Navigation Text -->
+
+  <color name="input_background">#E1F5FE</color> <!-- Very Light Blue for Inputs -->
+  <color name="white">#FFFFFF</color> <!-- White remains unchanged -->
+  <color name="brown_color">#039BE5</color> <!-- Changed to Blue to match Mykonos theme -->
+
+  <color name="background_color">#E0F7FA</color> <!-- Light Turquoise Background -->
+  <color name="primary">#0091EA</color> <!-- Primary Deep Blue -->
+<!--  <color name="gray">#B0BEC5</color> &lt;!&ndash; Soft Gray for Neutral Elements &ndash;&gt;-->
+  <color name="black">#212121</color> <!-- Black remains unchanged -->
+
+  <color name="coffee_card_bg">#B3E5FC</color> <!-- Light Blue for Cards -->
+  <color name="coffee_dark">#01579B</color> <!-- Deep Blue for Accents -->
+  <color name="coffee_brown">#0277BD</color> <!-- Medium Blue -->
+  <color name="coffee_light">#4FC3F7</color> <!-- Lighter Blue Shade -->
+  <color name="error">#D32F2F</color> <!-- Keep Red for Errors -->
+  <color name="red">#FF0000</color> <!-- Red remains unchanged -->
+
+  <color name="aegean_blue">#0077B6</color> <!-- Mykonos-style deep blue -->
+
+  <color name="mykonos_blue">#007ACC</color>  <!-- Aegean Blue -->
+  <color name="mykonos_white">#FFFFFF</color>  <!-- White -->
+  <color name="gray">#B0B0B0</color>  <!-- Light Gray -->
+
+</resources>
