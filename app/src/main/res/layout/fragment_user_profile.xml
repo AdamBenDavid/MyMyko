@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp"
+  tools:context=".UserProfileActivity">
+
+  <de.hdodenhof.circleimageview.CircleImageView
+    android:id="@+id/ivProfile"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    app:civ_border_width="2dp"
+    app:civ_border_color="@android:color/white"
+    android:src="@drawable/profile_foreground"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <TextView
+    android:id="@+id/tvUserName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="User Name"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    app:layout_constraintTop_toBottomOf="@id/ivProfile"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="16dp"/>
+
+  <TextView
+    android:id="@+id/tvEmail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Email"
+    android:textSize="16sp"
+    app:layout_constraintTop_toBottomOf="@id/tvUserName"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="8dp"/>
+
+  <TextView
+    android:id="@+id/tvLocation"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Location"
+    android:textSize="16sp"
+    app:layout_constraintTop_toBottomOf="@id/tvEmail"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="8dp"/>
+
+  <!-- RecyclerView להצגת הפוסטים של המשתמש -->
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/rvUserPosts"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tvLocation"
+    app:layout_constraintVertical_bias="1.0"
+    tools:listitem="@layout/item_post" />
+</androidx.constraintlayout.widget.ConstraintLayout>
