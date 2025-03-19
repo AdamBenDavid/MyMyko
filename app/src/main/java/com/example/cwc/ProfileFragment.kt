@@ -34,7 +34,7 @@ import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 
-class UserProfileFragment : Fragment() {
+class ProfileFragment : Fragment() {
 
   private lateinit var recyclerView: RecyclerView
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
