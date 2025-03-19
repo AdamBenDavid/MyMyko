@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.os.Bundle
 import android.util.Log
@@ -14,13 +14,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.cwc.adapters.PostAdapter
-import com.example.cwc.data.local.AppDatabase
-import com.example.cwc.data.local.User
-import com.example.cwc.data.models.Post
-import com.example.cwc.data.repository.UserRepository
-import com.example.cwc.viewmodel.UserViewModel
-import com.example.cwc.viewmodel.UserViewModelFactory
+import com.example.mymyko.adapters.PostAdapter
+import com.example.mymyko.data.local.AppDatabase
+import com.example.mymyko.data.local.User
+import com.example.mymyko.data.models.Post
+import com.example.mymyko.data.repository.UserRepository
+import com.example.mymyko.viewmodel.UserViewModel
+import com.example.mymyko.viewmodel.UserViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
   private lateinit var postAdapter: PostAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-  private lateinit var tvCoffeeRecommendation: TextView
+//  private lateinit var tvCoffeeRecommendation: TextView
 
   fun renderNav(user: User) {
     Log.d("HomeFragment", "Rendering BottomNavFragment for user: ${user.firstname} ${user.lastname}")
@@ -111,39 +111,43 @@ class HomeFragment : Fragment() {
       }
   }
 
-  private fun updateCoffeeRecommendation() {
-    viewLifecycleOwner.lifecycleScope.launch {
-      try {
-        val jsonData = withContext(Dispatchers.IO) {
-          val client = OkHttpClient()
-          val apiKey = "200b857da17d668dbf479de6ff89c982"
-          val url = "https://api.openweathermap.org/data/2.5/weather?q=Tel%20Aviv,IL&units=metric&appid=$apiKey"
-          val request = Request.Builder().url(url).build()
-          val response = client.newCall(request).execute()
-          response.body?.string()
-        }
+//  private fun updateMykonosRecommendation() {
+//    viewLifecycleOwner.lifecycleScope.launch {
+//      try {
+//        val jsonData = withContext(Dispatchers.IO) {
+//          val client = OkHttpClient()
+//          val apiKey = "200b857da17d668dbf479de6ff89c982"
+//          val url = "https://api.openweathermap.org/data/2.5/weather?q=Mykonos,GR&units=metric&appid=$apiKey"
+//          val request = Request.Builder().url(url).build()
+//          val response = client.newCall(request).execute()
+//          response.body?.string()
+//        }
+//
+//        if (jsonData != null) {
+//          val jsonObject = JSONObject(jsonData)
+//          val main = jsonObject.getJSONObject("main")
+//          val temp = main.getDouble("temp")
+//          val weatherDescription = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description")
+//
+//          val recommendation = when {
+//            temp < 10 -> "It's a chilly ${temp}°C with ${weatherDescription}! Explore Mykonos’ museums 🏛️, cozy up in a local taverna 🍷, or enjoy a spa day! 💆‍♂️"
+//            temp in 10.0..20.0 -> "The temperature is ${temp}°C with ${weatherDescription}. A perfect time for a scenic walk through Mykonos Town 🌆 or a sunset view from Little Venice! 🌅"
+//            temp in 20.0..30.0 -> "It's a warm ${temp}°C in Mykonos! Enjoy a beach day at Paradise Beach 🏖️, try water sports 🌊, or go on a boat tour to Delos! ⛵"
+//            else -> "It's a hot ${temp}°C with ${weatherDescription}! Cool off at Super Paradise Beach 🏝️, grab a refreshing cocktail 🍹, or visit a luxurious beach club for a chill day! 🎶"
+//          }
+//
+//          // Update UI on the main thread
+//          tvCoffeeRecommendation.text = recommendation
+//        } else {
+//          tvCoffeeRecommendation.text = "Weather data not available for Mykonos"
+//        }
+//      } catch (e: Exception) {
+//        e.printStackTrace()
+//        tvCoffeeRecommendation.text = "Weather data not available for Mykonos"
+//      }
+//    }
+//  }
 
-        if (jsonData != null) {
-          val jsonObject = JSONObject(jsonData)
-          val main = jsonObject.getJSONObject("main")
-          val temp = main.getDouble("temp")
-          val recommendation = when {
-            temp < 10 -> "It's chilly at ${temp}°C! How about a hot cappuccino?"
-            temp in 10.0..20.0 -> "It's ${temp}°C, perfect weather for a classic latte."
-            else -> "It's ${temp}°C outside! Try an iced coffee for a refreshing twist!"
-          }
-
-          // Now update the UI on the main thread
-          tvCoffeeRecommendation.text = recommendation
-        } else {
-          tvCoffeeRecommendation.text = "Weather data not available"
-        }
-      } catch (e: Exception) {
-        e.printStackTrace()
-        tvCoffeeRecommendation.text = "Weather data not available"
-      }
-    }
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -159,30 +163,8 @@ class HomeFragment : Fragment() {
     postAdapter = PostAdapter(postList, requireContext())
     recyclerView.adapter = postAdapter
 
-    tvCoffeeRecommendation = view.findViewById(R.id.tvCoffeeRecommendation)
-
-    val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-    val repository = UserRepository(userDao)
-    val factory = UserViewModelFactory(repository)
-    userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
-
-    viewLifecycleOwner.lifecycleScope.launch {
-      delay(1000)
-      userViewModel.getUsers()
-    }
-    userViewModel.users.observe(viewLifecycleOwner) { users ->
-      Log.d("HomeFragment", "Users list from ViewModel: $users")
-      if (users.isEmpty()) {
-        Toast.makeText(requireActivity(), "Not logged in", Toast.LENGTH_SHORT).show()
-        findNavController().navigate(R.id.action_homeFragment_to_logoutFragment)
-      } else {
-        renderNav(users[0])
-      }
-    }
-
     fetchPosts()
     fetchCurrentUserAndRenderNav()
-    updateCoffeeRecommendation()
 
     return view
   }
@@ -191,6 +173,5 @@ class HomeFragment : Fragment() {
     super.onResume()
     Log.d("HomeFragment", "onResume")
     fetchPosts()
-    updateCoffeeRecommendation()
   }
 }

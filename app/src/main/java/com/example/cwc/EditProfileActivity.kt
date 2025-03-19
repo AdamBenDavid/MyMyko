@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.content.Intent
 import android.content.ContentResolver
@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import com.example.cwc.cloudinary.CloudinaryService
-import com.example.cwc.cloudinary.CloudinaryUploadResponse
+import com.example.mymyko.cloudinary.CloudinaryService
+import com.example.mymyko.cloudinary.CloudinaryUploadResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -226,10 +226,10 @@ class EditProfileActivity : AppCompatActivity() {
     val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
     val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-    val preset = "CWC - Content With Coffee"
+    val preset = "profile_pictures_preset"
     val presetRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), preset)
 
-    val call = CloudinaryService.api.uploadImage("dtdw1bmq4", filePart, presetRequestBody)
+    val call = CloudinaryService.api.uploadImage("dkogrec1q", filePart, presetRequestBody)
     call.enqueue(object : Callback<CloudinaryUploadResponse> {
       override fun onResponse(
         call: Call<CloudinaryUploadResponse>,
@@ -243,11 +243,11 @@ class EditProfileActivity : AppCompatActivity() {
             onFailure("Upload succeeded but no URL returned")
           }
         } else {
-          onFailure("Upload failed: ${response.message()}")
+          onFailure("Upload failed ya ben zona: ${response.message()}")
         }
       }
       override fun onFailure(call: Call<CloudinaryUploadResponse>, t: Throwable) {
-        onFailure("Upload failed: ${t.message}")
+        onFailure("Upload failed : ${t.message}")
       }
     })
   }
@@ -257,7 +257,7 @@ class EditProfileActivity : AppCompatActivity() {
       val inputStream = contentResolver.openInputStream(uri)
       inputStream?.let {
         val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val appDir = File(picturesDir, "CWCImages")
+        val appDir = File(picturesDir, "mymykoImages")
         if (!appDir.exists()) {
           appDir.mkdirs()
         }
@@ -281,11 +281,11 @@ class EditProfileActivity : AppCompatActivity() {
       return
     }
     val timestamp = System.currentTimeMillis() / 1000
-    val apiSecret = "UIOi_lsef1LfVRNGKmLBCC3yjt8"
+    val apiSecret = "WGnb7PpUlyoEnWbj1-_PNTmyQfs"
     val signatureData = "public_id=$publicId&timestamp=$timestamp"
     val signature = sha1(signatureData + apiSecret)
 
-    CloudinaryService.api.deleteImage( "dtdw1bmq4",publicId, timestamp, signature, "316232596576643")
+    CloudinaryService.api.deleteImage( "dkogrec1q",publicId, timestamp, signature, "296316728133841")
       .enqueue(object : Callback<CloudinaryUploadResponse> {
         override fun onResponse(call: Call<CloudinaryUploadResponse>, response: Response<CloudinaryUploadResponse>) {
           if (response.isSuccessful) {

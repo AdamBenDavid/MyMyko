@@ -6,23 +6,23 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".RegisterFragment">
 
-  <!-- Full-Screen Background Image (NO Blur) -->
+  <!-- Full-Screen Background Image -->
   <ImageView
-      android:id="@+id/background"
+      android:id="@+id/background_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="centerCrop"
       android:src="@drawable/background"
       android:contentDescription="Background Image"/>
 
-  <!-- Welcome Title -->
+  <!-- Register Title -->
   <TextView
-      android:id="@+id/home_fragment"
+      android:id="@+id/register_title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Welcome Back!"
+      android:text="Create Account"
       android:textSize="30sp"
       android:textStyle="bold"
       android:textColor="@color/mykonos_blue"
@@ -31,11 +31,11 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintVertical_bias="0.15"/>
+      app:layout_constraintVertical_bias="0.1"/>
 
-  <!-- Login Card (Holds Email, Password, and Buttons) -->
+  <!-- Register Card -->
   <androidx.cardview.widget.CardView
-      android:id="@+id/loginCard"
+      android:id="@+id/registerCard"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_margin="20dp"
@@ -45,7 +45,7 @@
       app:layout_constraintWidth_percent="0.85"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/home_fragment">
+      app:layout_constraintTop_toBottomOf="@id/register_title">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,9 +53,37 @@
         android:padding="20dp"
         android:orientation="vertical">
 
-      <!-- Email Input -->
+      <!-- First Name Field -->
       <EditText
-          android:id="@+id/email"
+          android:id="@+id/firstname_field"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="First Name"
+          android:textColorHint="@color/gray"
+          android:textColor="@android:color/black"
+          android:inputType="text"
+          android:background="@drawable/rounded_input_bg"
+          android:padding="12dp"
+          android:elevation="2dp"
+          android:layout_marginBottom="12dp"/>
+
+      <!-- Last Name Field -->
+      <EditText
+          android:id="@+id/lastname_field"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Last Name"
+          android:textColorHint="@color/gray"
+          android:textColor="@android:color/black"
+          android:inputType="text"
+          android:background="@drawable/rounded_input_bg"
+          android:padding="12dp"
+          android:elevation="2dp"
+          android:layout_marginBottom="12dp"/>
+
+      <!-- Email Field -->
+      <EditText
+          android:id="@+id/email_field"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:hint="Enter your Email"
@@ -67,9 +95,9 @@
           android:elevation="2dp"
           android:layout_marginBottom="12dp"/>
 
-      <!-- Password Input -->
+      <!-- Password Field -->
       <EditText
-          android:id="@+id/password"
+          android:id="@+id/password_field"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:hint="Enter your Password"
@@ -79,26 +107,40 @@
           android:background="@drawable/rounded_input_bg"
           android:padding="12dp"
           android:elevation="2dp"
+          android:layout_marginBottom="12dp"/>
+
+      <!-- Country Field -->
+      <EditText
+          android:id="@+id/country_field"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Country"
+          android:textColorHint="@color/gray"
+          android:textColor="@android:color/black"
+          android:inputType="text"
+          android:background="@drawable/rounded_input_bg"
+          android:padding="12dp"
+          android:elevation="2dp"
           android:layout_marginBottom="20dp"/>
 
-      <!-- Login Button -->
+      <!-- Register Button -->
       <Button
-          android:id="@+id/submit"
+          android:id="@+id/register_submit_button"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:background="@drawable/rounded_button_bg"
-          android:text="Log in"
+          android:text="Register"
           android:textColor="@android:color/white"
           android:textSize="18sp"
           android:elevation="6dp"
           android:layout_marginBottom="10dp"/>
 
-      <!-- Register Button -->
+      <!-- Back to Login Button -->
       <TextView
-          android:id="@+id/register_button"
+          android:id="@+id/register_login_button"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="Don't have an account? Register"
+          android:text="Already have an account? Log in"
           android:textSize="16sp"
           android:textColor="@color/mykonos_blue"
           android:gravity="center"

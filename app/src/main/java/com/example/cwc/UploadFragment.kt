@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.net.Uri
 import android.os.Bundle
@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.cwc.cloudinary.CloudinaryService
-import com.example.cwc.cloudinary.CloudinaryUploadResponse
+import com.example.mymyko.cloudinary.CloudinaryService
+import com.example.mymyko.cloudinary.CloudinaryUploadResponse
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,14 +43,13 @@ class UploadFragment : Fragment() {
   private fun openGallery() {
     pickImageLauncher.launch("image/*")
   }
-
   // Saves the picked image locally before uploading to Cloudinary
   private fun saveImageLocally(uri: Uri): String? {
     return try {
       val inputStream = requireContext().contentResolver.openInputStream(uri)
       inputStream?.let {
         val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val appDir = File(picturesDir, "CWCImages")
+        val appDir = File(picturesDir, "mymykoImages")
         if (!appDir.exists()) {
           appDir.mkdirs()
         }
@@ -73,35 +72,47 @@ class UploadFragment : Fragment() {
     onSuccess: (String) -> Unit,
     onFailure: (String) -> Unit
   ) {
+    Log.d("clouds","start func");
     val localImagePath = saveImageLocally(imageUri)
     if (localImagePath == null) {
       onFailure("Failed to save image locally")
+      Log.d("clouds","fail image local");
       return
     }
+    Log.d("clouds","suscces saves local path");
+
     val file = File(localImagePath)
     val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
     val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-    val preset = "CWC - Content With Coffee"
+    val preset = "post_pictures_preset"
     val presetRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), preset)
 
-    val call = CloudinaryService.api.uploadImage("dtdw1bmq4", filePart, presetRequestBody)
+    val call = CloudinaryService.api.uploadImage("dkogrec1q", filePart, presetRequestBody)
     call.enqueue(object : Callback<CloudinaryUploadResponse> {
       override fun onResponse(call: Call<CloudinaryUploadResponse>, response: Response<CloudinaryUploadResponse>) {
+        Log.d("clouds", "Cloudinary response code: ${response.code()}")
+        Log.d("clouds", "Cloudinary response message: ${response.message()}")
+
         if (response.isSuccessful) {
           val uploadResponse = response.body()
           if (uploadResponse?.secure_url != null) {
             onSuccess(uploadResponse.secure_url)
           } else {
             onFailure("Upload succeeded but no URL returned")
+            Log.d("clouds", "not successful1")
           }
         } else {
-          onFailure("Upload failed: ${response.message()}")
+          val errorBody = response.errorBody()?.string() ?: "Unknown error"
+          onFailure("Upload failed: $errorBody")
+          Log.e("clouds", "Cloudinary error: $errorBody")
+          Log.d("clouds", "not successful2")
         }
       }
 
       override fun onFailure(call: Call<CloudinaryUploadResponse>, t: Throwable) {
         onFailure("Upload failed: ${t.message}")
+        Log.d("clouds","upload failed ya ben zona");
       }
     })
   }
