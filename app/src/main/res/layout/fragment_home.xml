@@ -1,0 +1,76 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeFragment"
+    android:background="@color/background_color">
+
+  <!-- Title at top -->
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="CWC - content with coffee"
+      android:textSize="28sp"
+      android:textStyle="bold"
+      android:textColor="@color/title_color"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginTop="24dp" />
+
+  <!-- Card for the coffee recommendation -->
+  <androidx.cardview.widget.CardView
+      android:id="@+id/coffeeCard"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:cardCornerRadius="12dp"
+      app:cardElevation="6dp"
+      android:layout_margin="16dp"
+      app:layout_constraintTop_toBottomOf="@id/title"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent">
+
+    <TextView
+        android:id="@+id/tvCoffeeRecommendation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fetching coffee recommendation..."
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:padding="16dp" />
+  </androidx.cardview.widget.CardView>
+
+  <!-- SwipeRefresh + RecyclerView BELOW the coffee card -->
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintTop_toBottomOf="@id/coffeeCard"
+      app:layout_constraintBottom_toTopOf="@id/navbar_container"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:paddingTop="0dp" />
+
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+  <!-- Bottom navigation container at the very bottom -->
+  <FrameLayout
+      android:id="@+id/navbar_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
