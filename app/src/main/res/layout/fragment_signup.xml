@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".RegisterFragment">
+
+  <!-- Background Image -->
+  <ImageView
+    android:id="@+id/background_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:src="@drawable/background"
+    android:contentDescription="Background Image"/>
+
+  <!-- Register Title -->
+  <TextView
+    android:id="@+id/home_fragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Create Account"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    android:textColor="@color/white"
+    android:padding="12dp"
+    android:gravity="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.1"/>
+
+  <!-- First Name Field -->
+  <EditText
+    android:id="@+id/firstname_field"
+    android:layout_width="280dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="20dp"
+    android:hint="First Name"
+    android:textColorHint="@color/white"
+    android:inputType="text"
+    android:textColor="@color/white"
+    android:background="@drawable/edittext_bg"
+    android:padding="12dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/home_fragment"
+    app:layout_constraintVertical_bias="0.1"/>
+
+  <!-- Last Name Field -->
+  <EditText
+    android:id="@+id/lastname_field"
+    android:layout_width="280dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="12dp"
+    android:hint="Last Name"
+    android:textColorHint="@color/white"
+    android:inputType="text"
+    android:textColor="@color/white"
+    android:background="@drawable/edittext_bg"
+    android:padding="12dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/firstname_field"/>
+
+  <!-- Email Field -->
+  <EditText
+    android:id="@+id/email_field"
+    android:layout_width="280dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="12dp"
+    android:hint="Enter your Email"
+    android:textColorHint="@color/white"
+    android:inputType="textEmailAddress"
+    android:textColor="@color/white"
+    android:background="@drawable/edittext_bg"
+    android:padding="12dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/lastname_field"/>
+
+  <!-- Password Field -->
+  <EditText
+    android:id="@+id/password_field"
+    android:layout_width="280dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="12dp"
+    android:hint="Enter your Password"
+    android:textColorHint="@color/white"
+    android:inputType="textPassword"
+    android:textColor="@color/white"
+    android:background="@drawable/edittext_bg"
+    android:padding="12dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/email_field"/>
+
+  <!-- Country Field -->
+  <EditText
+    android:id="@+id/country_field"
+    android:layout_width="280dp"
+    android:layout_height="50dp"
+    android:layout_marginTop="12dp"
+    android:hint="Country"
+    android:textColorHint="@color/white"
+    android:inputType="text"
+    android:textColor="@color/white"
+    android:background="@drawable/edittext_bg"
+    android:padding="12dp"
+    android:elevation="4dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/password_field"/>
+
+  <!-- Register Button -->
+  <Button
+    android:id="@+id/register_submit_button"
+    android:layout_width="200dp"
+    android:layout_height="50dp"
+    android:backgroundTint="@color/brown_color"
+    android:text="Register"
+    android:textColor="@color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.497"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/country_field"
+    app:layout_constraintVertical_bias="0.2"/>
+
+  <!-- Back to Login Button -->
+  <Button
+    android:id="@+id/register_login_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/brown_color"
+    android:text="Back to Login"
+    android:textColor="@color/white"
+    android:layout_marginTop="12dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/register_submit_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
