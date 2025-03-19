@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/background_color"
+  app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+  <!-- כותרת -->
+  <TextView
+    android:id="@+id/title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Share your coffee moment"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:textColor="@color/black"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="32dp"
+    android:gravity="center"/>
+
+  <!-- שדה תיאור הפוסט -->
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/description"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:boxBackgroundMode="filled"
+    app:boxStrokeColor="@color/primary"
+    app:layout_constraintTop_toBottomOf="@id/title"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <com.google.android.material.textfield.TextInputEditText
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:maxLines="5"
+      android:hint="Describe your coffee experience..."
+      android:textColor="@color/black"
+      android:textColorHint="@color/gray"/>
+  </com.google.android.material.textfield.TextInputLayout>
+
+  <!-- כפתור בחירת תמונה -->
+  <Button
+    android:id="@+id/upload_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Upload Image"
+    android:textColor="@color/white"
+    android:layout_marginTop="12dp"
+    app:layout_constraintTop_toBottomOf="@id/description"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <!-- כפתור שיתוף הפוסט -->
+  <Button
+    android:id="@+id/share"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Share Now"
+    android:textColor="@color/white"
+    android:textStyle="bold"
+    android:padding="12dp"
+    android:layout_margin="16dp"
+    app:layout_constraintTop_toBottomOf="@id/upload_button"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+  <FrameLayout
+      android:id="@+id/navbar_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
