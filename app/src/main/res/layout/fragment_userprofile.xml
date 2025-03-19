@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/profile_fragment"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".ProfileFragment"
+  android:background="@color/background_color">
+
+  <!-- Profile Card -->
+  <androidx.cardview.widget.CardView
+    android:id="@+id/profile_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/white"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:gravity="center"
+      android:padding="16dp">
+
+      <!-- Profile Image -->
+      <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/profile_foreground"
+        android:layout_gravity="center"
+        android:elevation="4dp"/>
+
+      <!-- Full Name -->
+      <TextView
+        android:id="@+id/fullname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="John Doe"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
+        android:gravity="center"/>
+
+      <!-- Location -->
+      <TextView
+        android:id="@+id/location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New York, USA"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:gravity="center"/>
+
+      <!-- Email -->
+      <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="johndoe@example.com"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        android:gravity="center"/>
+
+      <!-- Edit Profile Button -->
+      <!-- בלחיצה על כפתור זה נעבור למסך עריכת פרופיל -->
+      <Button
+        android:id="@+id/edit_profile_picture_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Edit Profile"
+        android:padding="10dp"/>
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+
+  <!-- Posts Section -->
+  <androidx.cardview.widget.CardView
+    android:id="@+id/posts_container"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="6dp"
+    app:cardBackgroundColor="@color/white"
+    app:layout_constraintTop_toBottomOf="@+id/profile_card"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@+id/navbar_container">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout_profile"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="16dp"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+  </androidx.cardview.widget.CardView>
+
+  <!-- Navigation Bar -->
+  <FrameLayout
+    android:id="@+id/navbar_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
