@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -14,10 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.cwc.adapters.ProfilePostAdapter
-import com.example.cwc.cloudinary.CloudinaryService
-import com.example.cwc.cloudinary.CloudinaryUploadResponse
-import com.example.cwc.data.models.Post
+import com.example.mymyko.adapters.ProfilePostAdapter
+import com.example.mymyko.cloudinary.CloudinaryService
+import com.example.mymyko.cloudinary.CloudinaryUploadResponse
+import com.example.mymyko.data.models.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -33,6 +33,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.math.log
 
 class ProfileFragment : Fragment() {
 
@@ -223,41 +224,59 @@ class ProfileFragment : Fragment() {
     onSuccess: (String) -> Unit,
     onFailure: (String) -> Unit
   ) {
+
     val localImagePath = saveImageLocally(imageUri)
     if (localImagePath == null) {
       onFailure("Failed to save image locally")
       return
     }
+
     val file = File(localImagePath)
+    if (!file.exists()) {
+      onFailure("File does not exist at: $localImagePath")
+      return
+    }
+
     val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
     val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-    val preset = "CWC - Content With Coffee"
+    val preset="post_pictures_preset"
     val presetRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), preset)
 
-    val call = CloudinaryService.api.uploadImage("dtdw1bmq4", filePart, presetRequestBody)
+    val cloudName = "dkogrec1q" // Replace with your Cloudinary Cloud Name
+    val call = CloudinaryService.api.uploadImage(cloudName, filePart, presetRequestBody)
+
     call.enqueue(object : Callback<CloudinaryUploadResponse> {
       override fun onResponse(
         call: Call<CloudinaryUploadResponse>,
         response: Response<CloudinaryUploadResponse>
       ) {
+        Log.d("profileIMAGE", "Response Code: ${response.code()}")
+        Log.d("profileIMAGE", "Response Body: ${response.body()?.secure_url}")
+
         if (response.isSuccessful) {
           val uploadResponse = response.body()
           if (uploadResponse?.secure_url != null) {
+            Log.d("profileIMAGE", "Upload Success: ${uploadResponse.secure_url}")
             onSuccess(uploadResponse.secure_url)
           } else {
+            Log.e("profileIMAGE", "Upload success but no URL returned")
             onFailure("Upload succeeded but no URL returned")
           }
         } else {
-          onFailure("Upload failed: ${response.message()}")
+          val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+          Log.e("profileIMAGE", "Upload failed: $errorMessage")
+          onFailure("Upload failed: $errorMessage")
         }
       }
 
       override fun onFailure(call: Call<CloudinaryUploadResponse>, t: Throwable) {
+        Log.e("profileIMAGE", "Upload failed: ${t.message}")
         onFailure("Upload failed: ${t.message}")
       }
     })
   }
+
 
 
   private fun saveImageLocally(uri: Uri): String? {
@@ -265,7 +284,7 @@ class ProfileFragment : Fragment() {
       val inputStream = requireContext().contentResolver.openInputStream(uri)
       inputStream?.let {
         val picturesDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val appDir = File(picturesDir, "CWCImages")
+        val appDir = File(picturesDir, "mymykoImages")
         if (!appDir.exists()) {
           appDir.mkdirs()
         }

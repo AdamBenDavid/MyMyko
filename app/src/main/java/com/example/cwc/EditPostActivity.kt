@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.app.Activity
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.cwc.R
-import com.example.cwc.data.models.Post
+import com.example.mymyko.R
+import com.example.mymyko.data.models.Post
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 import java.io.Serializable

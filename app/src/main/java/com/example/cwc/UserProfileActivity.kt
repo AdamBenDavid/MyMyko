@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.signature.ObjectKey
-import com.example.cwc.adapters.UserPostsAdapter
-import com.example.cwc.data.models.Post
+import com.example.mymyko.adapters.UserPostsAdapter
+import com.example.mymyko.data.models.Post
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import de.hdodenhof.circleimageview.CircleImageView

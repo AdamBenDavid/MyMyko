@@ -1,4 +1,4 @@
-package com.example.cwc
+package com.example.mymyko
 
 
 import android.os.Bundle
@@ -18,7 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
-class SignUpFragment : Fragment() {
+class RegisterFragment : Fragment() {
   private lateinit var etEmail: EditText
   private lateinit var etFirstName: EditText
   private lateinit var etLastName: EditText
