@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.cwc.BottomNavFragment
 import com.example.mymyko.adapters.ProfilePostAdapter
 import com.example.mymyko.cloudinary.CloudinaryService
 import com.example.mymyko.cloudinary.CloudinaryUploadResponse

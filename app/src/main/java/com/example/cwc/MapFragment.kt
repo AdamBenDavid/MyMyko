@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.cwc.BottomNavFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,11 +21,27 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Looper
+import android.widget.Button
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.maps.model.Marker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var mMap: GoogleMap? = null
     private lateinit var tvWeatherRecommendation: TextView
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private var currentLocationMarker: Marker? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,23 +64,65 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         fetchWeatherAndUpdateRecommendation() // Fetch weather data when the map is created
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         return view
     }
 
+    @SuppressLint("MissingPermission")
+    private fun getUserLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                val userLatLng = LatLng(location.latitude, location.longitude)
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
+
+                // Remove old marker if exists
+                currentLocationMarker?.remove()
+                currentLocationMarker = mMap?.addMarker(
+                    MarkerOptions().position(userLatLng).title("You are here!")
+                )
+            } else {
+                Toast.makeText(requireContext(), "Could not get location", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Center the map on Mykonos
+        // Enable "My Location" button
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+            mMap?.isMyLocationEnabled = true
+        }
+
+        // Center the map on Mykonos initially
         val mykonosCenter = LatLng(37.4467, 25.3289)
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(mykonosCenter, 12f))
-
-        // Add a marker for reference
-        mMap?.addMarker(
-            MarkerOptions()
-                .position(mykonosCenter)
-                .title("Welcome to Mykonos!")
-        )
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getUserLocation()
+        } else {
+            Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     private fun fetchWeatherAndUpdateRecommendation() {
         viewLifecycleOwner.lifecycleScope.launch {
