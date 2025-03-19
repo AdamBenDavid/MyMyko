@@ -11,7 +11,7 @@
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Share your coffee moment"
+      android:text="Share your experience in Mykonos"
       android:textSize="24sp"
       android:textStyle="bold"
       android:textColor="@color/black"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="5"
-        android:hint="Describe your coffee experience..."
+        android:hint="Recommend a place..."
         android:textColor="@color/black"
         android:textColorHint="@color/gray"/>
   </com.google.android.material.textfield.TextInputLayout>
