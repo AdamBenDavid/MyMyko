@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymyko.R
+import com.example.mymyko.UserProfileActivity
 import com.example.mymyko.data.models.Comment
 import com.example.mymyko.data.models.Post
 import com.google.firebase.auth.FirebaseAuth

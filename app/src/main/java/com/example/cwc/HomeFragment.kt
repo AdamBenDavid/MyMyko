@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.cwc.BottomNavFragment
 import com.example.mymyko.adapters.PostAdapter
 import com.example.mymyko.data.local.AppDatabase
 import com.example.mymyko.data.local.User
