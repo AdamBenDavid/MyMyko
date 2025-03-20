@@ -12,7 +12,20 @@
           "package_name": "com.example.mymyko"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "624278310110-agd7d1ibcakg7kmtesq2ov6n1a0fnreh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mymyko",
+            "certificate_hash": "a1e13416309b9416fa8fc7b92b6e22d3b425fb40"
+          }
+        },
+        {
+          "client_id": "624278310110-29ulgam2b010ssflc1jvalcho38fv7qn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDLwK3vQx0BIUh1ITfMLuLuhpmHAurEob8"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624278310110-29ulgam2b010ssflc1jvalcho38fv7qn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
