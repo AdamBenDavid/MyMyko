@@ -19,7 +19,7 @@
       android:layout_marginStart="5dp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:srcCompat="@drawable/profile_foreground" />
+      app:srcCompat="@drawable/profile_icon" />
 
     <TextView
       android:id="@+id/post_user_name"

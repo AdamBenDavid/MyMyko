@@ -3,25 +3,25 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/home_foreground"
+        android:icon="@drawable/home_icon"
         android:title="home"/>
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/map_icon"
+        android:title="Map" />
     <item
         android:id="@+id/upload"
         android:enabled="true"
-        android:icon="@drawable/upload_foreground"
+        android:icon="@drawable/add_icon"
         android:title="upload"/>
     <item
         android:id="@+id/profile"
         android:enabled="true"
-        android:icon="@drawable/profile_foreground"
+        android:icon="@drawable/profile_icon"
         android:title="profile"/>
-    <item
-        android:id="@+id/map"
-        android:icon="@drawable/ic_language"
-        android:title="Map" />
     <item
         android:id="@+id/logout"
         android:enabled="true"
-        android:icon="@drawable/logout_foreground"
+        android:icon="@drawable/logout_icon"
         android:title="logout"/>
 </menu>

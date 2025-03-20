@@ -34,7 +34,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.log
 
 class ProfileFragment : Fragment() {
 
@@ -137,8 +136,8 @@ class ProfileFragment : Fragment() {
               val finalUrl = "$profileImageUrl?ts=${System.currentTimeMillis()}"
               Picasso.get()
                 .load(finalUrl)
-                .placeholder(R.drawable.profile_foreground)
-                .error(R.drawable.profile_foreground)
+                .placeholder(R.drawable.profile_icon)
+                .error(R.drawable.profile_icon)
                 .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(profileImage)
@@ -147,11 +146,11 @@ class ProfileFragment : Fragment() {
               if (bitmap != null) {
                 profileImage?.setImageBitmap(bitmap)
               } else {
-                profileImage?.setImageResource(R.drawable.profile_foreground)
+                profileImage?.setImageResource(R.drawable.profile_icon)
               }
             }
           } else {
-            profileImage?.setImageResource(R.drawable.profile_foreground)
+            profileImage?.setImageResource(R.drawable.profile_icon)
           }
         }
       }

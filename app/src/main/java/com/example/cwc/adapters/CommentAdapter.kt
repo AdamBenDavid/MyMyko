@@ -54,13 +54,13 @@ class CommentAdapter(
           if (profileUrl.isNotEmpty()) {
             Picasso.get()
               .load(profileUrl)
-              .placeholder(R.drawable.profile_foreground)
-              .error(R.drawable.profile_foreground)
+              .placeholder(R.drawable.profile_icon)
+              .error(R.drawable.profile_icon)
               .fit()
               .centerCrop()
               .into(holder.commentAvatar)
           } else {
-            holder.commentAvatar.setImageResource(R.drawable.profile_foreground)
+            holder.commentAvatar.setImageResource(R.drawable.profile_icon)
           }
 
           // Set click listener on the username
@@ -69,12 +69,12 @@ class CommentAdapter(
           }
         } else {
           holder.commentUserName.text = "Unknown User"
-          holder.commentAvatar.setImageResource(R.drawable.profile_foreground)
+          holder.commentAvatar.setImageResource(R.drawable.profile_icon)
         }
       }
       .addOnFailureListener {
         holder.commentUserName.text = "Unknown User"
-        holder.commentAvatar.setImageResource(R.drawable.profile_foreground)
+        holder.commentAvatar.setImageResource(R.drawable.profile_icon)
       }
   }
 

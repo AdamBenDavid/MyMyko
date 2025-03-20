@@ -74,20 +74,20 @@ class PostAdapter(
             }
             Picasso.get()
               .load(loadUrl)
-              .placeholder(R.drawable.profile_foreground)
-              .error(R.drawable.profile_foreground)
+              .placeholder(R.drawable.profile_icon)
+              .error(R.drawable.profile_icon)
               .into(holder.profileImage)
           } else {
-            holder.profileImage.setImageResource(R.drawable.profile_foreground)
+            holder.profileImage.setImageResource(R.drawable.profile_icon)
           }
         } else {
           holder.userName.text = "Unknown User"
-          holder.profileImage.setImageResource(R.drawable.profile_foreground)
+          holder.profileImage.setImageResource(R.drawable.profile_icon)
         }
       }
       .addOnFailureListener {
         holder.userName.text = "Unknown User"
-        holder.profileImage.setImageResource(R.drawable.profile_foreground)
+        holder.profileImage.setImageResource(R.drawable.profile_icon)
       }
 
     holder.profileImage.setOnClickListener {
