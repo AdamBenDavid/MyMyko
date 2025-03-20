@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.cwc.BottomNavFragment
 import com.example.mymyko.cloudinary.CloudinaryService
 import com.example.mymyko.cloudinary.CloudinaryUploadResponse
 import com.google.android.material.textfield.TextInputLayout
