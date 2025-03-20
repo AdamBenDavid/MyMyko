@@ -65,8 +65,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         } else if (!it.profileImageUrl.isNullOrEmpty()) {
           Picasso.get()
             .load(it.profileImageUrl)
-            .placeholder(com.example.mymyko.R.drawable.profile_foreground)
-            .error(com.example.mymyko.R.drawable.profile_foreground)
+            .placeholder(com.example.mymyko.R.drawable.profile_icon)
+            .error(com.example.mymyko.R.drawable.profile_icon)
             .into(profileImage)
         }
       }

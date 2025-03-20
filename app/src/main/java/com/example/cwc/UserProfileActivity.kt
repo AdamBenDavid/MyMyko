@@ -108,7 +108,7 @@ class UserProfileActivity : AppCompatActivity() {
     if (profileImageUrl.isNotEmpty()) {
       updateProfileImage(profileImageUrl)
     } else {
-      ivProfile.setImageResource(R.drawable.profile_foreground)
+      ivProfile.setImageResource(R.drawable.profile_icon)
     }
   }
 
@@ -120,8 +120,8 @@ class UserProfileActivity : AppCompatActivity() {
       .signature(ObjectKey(imageUrl + System.currentTimeMillis()))
       .diskCacheStrategy(DiskCacheStrategy.NONE)
       .skipMemoryCache(true)
-      .placeholder(R.drawable.profile_foreground)
-      .error(R.drawable.profile_foreground)
+      .placeholder(R.drawable.profile_icon)
+      .error(R.drawable.profile_icon)
       .into(ivProfile)
   }
 
