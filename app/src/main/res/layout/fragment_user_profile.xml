@@ -14,7 +14,7 @@
       android:layout_height="100dp"
       app:civ_border_width="2dp"
       app:civ_border_color="@android:color/white"
-      android:src="@drawable/profile_foreground"
+      android:src="@drawable/profile_icon"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"/>

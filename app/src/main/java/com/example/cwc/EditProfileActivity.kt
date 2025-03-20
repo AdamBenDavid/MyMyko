@@ -1,7 +1,6 @@
 package com.example.mymyko
 
 import android.content.Intent
-import android.content.ContentResolver
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -102,8 +101,8 @@ class EditProfileActivity : AppCompatActivity() {
             if (profileImageUrl.startsWith("http://") || profileImageUrl.startsWith("https://")) {
               Picasso.get()
                 .load(profileImageUrl)
-                .placeholder(R.drawable.profile_foreground)
-                .error(R.drawable.profile_foreground)
+                .placeholder(R.drawable.profile_icon)
+                .error(R.drawable.profile_icon)
                 .networkPolicy(
                   com.squareup.picasso.NetworkPolicy.NO_CACHE,
                   com.squareup.picasso.NetworkPolicy.NO_STORE
@@ -118,11 +117,11 @@ class EditProfileActivity : AppCompatActivity() {
               if (bitmap != null) {
                 profileImageView.setImageBitmap(bitmap)
               } else {
-                profileImageView.setImageResource(R.drawable.profile_foreground)
+                profileImageView.setImageResource(R.drawable.profile_icon)
               }
             }
           } else {
-            profileImageView.setImageResource(R.drawable.profile_foreground)
+            profileImageView.setImageResource(R.drawable.profile_icon)
           }
         }
       }
@@ -169,8 +168,8 @@ class EditProfileActivity : AppCompatActivity() {
         updateProfileInFirestore(userId, updates)
         Picasso.get()
           .load(secureUrl)
-          .placeholder(R.drawable.profile_foreground)
-          .error(R.drawable.profile_foreground)
+          .placeholder(R.drawable.profile_icon)
+          .error(R.drawable.profile_icon)
           .networkPolicy(
             com.squareup.picasso.NetworkPolicy.NO_CACHE,
             com.squareup.picasso.NetworkPolicy.NO_STORE
