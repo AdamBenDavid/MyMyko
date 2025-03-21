@@ -24,13 +24,22 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.core.app.ActivityCompat
 import com.example.mymyko.data.models.Post
 import com.google.android.gms.location.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.tasks.Tasks
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.Filter
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -68,10 +77,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+        val apiKey = getString(R.string.google_places_api_key)
+        if (!Places.isInitialized()) {
+            Places.initialize(requireContext().applicationContext, apiKey)
+        }
+
         arguments?.let {
             focusedLat = it.getDouble("focus_lat", 0.0)
             focusedLng = it.getDouble("focus_lng", 0.0)
         }
+
+        setupAutocomplete(view)
 
         return view
     }
@@ -209,5 +225,72 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
     }
 
+    private fun setupAutocomplete(view: View) {
+        val locationInput = view.findViewById<AutoCompleteTextView>(R.id.map_search_input)
+        val placesClient = Places.createClient(requireContext())
+        val token = AutocompleteSessionToken.newInstance()
+        val placeIdMap = mutableMapOf<String, String>()
+
+        val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line) {
+            val suggestions = mutableListOf<String>()
+
+            override fun getCount(): Int = suggestions.size
+            override fun getItem(position: Int): String = suggestions[position]
+
+            override fun getFilter(): Filter {
+                return object : Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        val results = FilterResults()
+                        if (!constraint.isNullOrEmpty()) {
+                            val request = FindAutocompletePredictionsRequest.builder()
+                                .setSessionToken(token)
+                                .setQuery(constraint.toString())
+                                .build()
+
+                            val task = placesClient.findAutocompletePredictions(request)
+                            val response = Tasks.await(task)
+
+                            suggestions.clear()
+                            placeIdMap.clear()
+                            response.autocompletePredictions.forEach {
+                                val name = it.getFullText(null).toString()
+                                suggestions.add(name)
+                                placeIdMap[name] = it.placeId
+                            }
+
+                            results.values = suggestions
+                            results.count = suggestions.size
+                        }
+                        return results
+                    }
+
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+
+        locationInput.setAdapter(adapter)
+
+        locationInput.setOnItemClickListener { _, _, position, _ ->
+            val selected = adapter.getItem(position) ?: return@setOnItemClickListener
+            val placeId = placeIdMap[selected] ?: return@setOnItemClickListener
+
+            val request = FetchPlaceRequest.builder(placeId, listOf(Place.Field.LAT_LNG, Place.Field.NAME)).build()
+            placesClient.fetchPlace(request)
+                .addOnSuccessListener { response ->
+                    val place = response.place
+                    val latLng = place.latLng
+                    if (latLng != null) {
+                        mMap?.addMarker(MarkerOptions().position(latLng).title(place.name))
+                        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Place not found", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
 
 }
