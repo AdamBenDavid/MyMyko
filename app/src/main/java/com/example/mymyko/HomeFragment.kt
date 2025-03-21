@@ -27,7 +27,6 @@ class HomeFragment : Fragment() {
   private lateinit var postAdapter: PostAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-//  private lateinit var tvCoffeeRecommendation: TextView
 
   fun renderNav(user: User) {
     Log.d("HomeFragment", "Rendering BottomNavFragment for user: ${user.firstname} ${user.lastname}")
@@ -50,7 +49,10 @@ class HomeFragment : Fragment() {
       .addOnSuccessListener { documents ->
         postList.clear()
         for (document in documents) {
-          val post = document.toObject(Post::class.java)
+          val post = document.toObject(Post::class.java).copy(
+            id = document.id,  // Ensure we include Firestore document ID
+            place_name = document.getString("place_name") ?: "Unknown Location",
+          )
           postList.add(post)
         }
         postAdapter.notifyDataSetChanged()
@@ -62,6 +64,7 @@ class HomeFragment : Fragment() {
         swipeRefreshLayout.isRefreshing = false
       }
   }
+
 
   private fun fetchCurrentUserAndRenderNav() {
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid

@@ -20,6 +20,7 @@ class UserPostsAdapter(
   class UserPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val postImage: ImageView = view.findViewById(R.id.post_image)
     val postDescription: TextView = view.findViewById(R.id.post_description)
+    val postLocation:TextView=view.findViewById(R.id.post_location)
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserPostViewHolder {
@@ -36,6 +37,13 @@ class UserPostsAdapter(
       .into(holder.postImage)
     // הצגת תיאור הפוסט
     holder.postDescription.text = post.description
+
+    holder.postLocation.text = if (post.place_name.isNotEmpty()) {
+      post.place_name
+    } else {
+      "Unknown Location"  // Default text if no place is set
+    }
+
   }
 
   override fun getItemCount(): Int = postList.size

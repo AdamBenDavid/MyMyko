@@ -44,6 +44,7 @@ android {
 dependencies {
   implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
   implementation("com.google.android.gms:play-services-maps:18.1.0")
+  implementation("com.google.android.libraries.places:places:3.4.0")
 
   implementation ("com.google.android.libraries.identity.googleid:googleid:1.0.6")
 
