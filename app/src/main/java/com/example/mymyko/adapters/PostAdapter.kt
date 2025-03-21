@@ -34,6 +34,7 @@ class PostAdapter(
     val userName: TextView = view.findViewById(R.id.post_user_name)
     val postImage: ImageView = view.findViewById(R.id.post_image)
     val postDescription: TextView = view.findViewById(R.id.post_description)
+    val postLocation: TextView = view.findViewById(R.id.post_location)
     val likeButton: ImageView = view.findViewById(R.id.like_button)
     val likeCount: TextView = view.findViewById(R.id.like_count)
     val etComment: EditText = view.findViewById(R.id.etComment)
@@ -100,6 +101,13 @@ class PostAdapter(
       intent.putExtra("userId", post.user_id)
       context.startActivity(intent)
     }
+    if (post.place_name.isNotEmpty()) {
+      holder.postLocation.visibility = View.VISIBLE
+      holder.postLocation.text = post.place_name
+    } else {
+      holder.postLocation.visibility = View.GONE  // Hide if no place name
+    }
+
 
     holder.likeCount.text = post.likes.toString()
     updateLikeUI(holder, post, currentUserId)

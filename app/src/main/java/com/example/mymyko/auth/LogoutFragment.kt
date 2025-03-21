@@ -1,4 +1,4 @@
-package com.example.mymyko
+package com.example.mymyko.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.mymyko.R
 import com.example.mymyko.data.local.AppDatabase
 import com.example.mymyko.data.repository.UserRepository
 import com.example.mymyko.viewmodel.UserViewModel

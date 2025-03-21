@@ -71,7 +71,7 @@
 
   <fragment
       android:id="@+id/logoutFragment"
-      android:name="com.example.mymyko.LogoutFragment"
+      android:name="com.example.mymyko.auth.LogoutFragment"
       android:label="fragment_logout"
       tools:layout="@layout/fragment_logout" >
     <action
@@ -81,7 +81,7 @@
 
   <fragment
       android:id="@+id/loginFragment"
-      android:name="com.example.mymyko.LoginFragment"
+      android:name="com.example.mymyko.auth.LoginFragment"
       android:label="LoginFragment" >
     <action
         android:id="@+id/action_loginFragment_to_homeFragment"
@@ -93,7 +93,7 @@
 
   <fragment
       android:id="@+id/registerFragment"
-      android:name="com.example.mymyko.RegisterFragment"
+      android:name="com.example.mymyko.auth.RegisterFragment"
       android:label="RegisterFragment" >
     <action
         android:id="@+id/action_registerFragment_to_loginFragment"

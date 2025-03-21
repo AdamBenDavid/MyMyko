@@ -5,33 +5,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.cwc.BottomNavFragment
 import com.example.mymyko.adapters.PostAdapter
-import com.example.mymyko.data.local.AppDatabase
 import com.example.mymyko.data.local.User
 import com.example.mymyko.data.models.Post
-import com.example.mymyko.data.repository.UserRepository
 import com.example.mymyko.viewmodel.UserViewModel
-import com.example.mymyko.viewmodel.UserViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
 
 class HomeFragment : Fragment() {
 
@@ -41,7 +27,6 @@ class HomeFragment : Fragment() {
   private lateinit var postAdapter: PostAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-//  private lateinit var tvCoffeeRecommendation: TextView
 
   fun renderNav(user: User) {
     Log.d("HomeFragment", "Rendering BottomNavFragment for user: ${user.firstname} ${user.lastname}")
@@ -64,7 +49,10 @@ class HomeFragment : Fragment() {
       .addOnSuccessListener { documents ->
         postList.clear()
         for (document in documents) {
-          val post = document.toObject(Post::class.java)
+          val post = document.toObject(Post::class.java).copy(
+            id = document.id,  // Ensure we include Firestore document ID
+            place_name = document.getString("place_name") ?: "Unknown Location",
+          )
           postList.add(post)
         }
         postAdapter.notifyDataSetChanged()
@@ -76,6 +64,7 @@ class HomeFragment : Fragment() {
         swipeRefreshLayout.isRefreshing = false
       }
   }
+
 
   private fun fetchCurrentUserAndRenderNav() {
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
