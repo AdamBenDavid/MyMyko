@@ -12,5 +12,5 @@ data class User(
   val city: String = "undefined",
   val country: String = "undefined",
   val profileImageUrl: String? = null,
-  val imageBlob: ByteArray? = null  // הוסף את השדה הזה
+  val imageBlob: ByteArray? = null
   )
