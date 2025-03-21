@@ -101,43 +101,6 @@ class HomeFragment : Fragment() {
       }
   }
 
-//  private fun updateMykonosRecommendation() {
-//    viewLifecycleOwner.lifecycleScope.launch {
-//      try {
-//        val jsonData = withContext(Dispatchers.IO) {
-//          val client = OkHttpClient()
-//          val apiKey = "200b857da17d668dbf479de6ff89c982"
-//          val url = "https://api.openweathermap.org/data/2.5/weather?q=Mykonos,GR&units=metric&appid=$apiKey"
-//          val request = Request.Builder().url(url).build()
-//          val response = client.newCall(request).execute()
-//          response.body?.string()
-//        }
-//
-//        if (jsonData != null) {
-//          val jsonObject = JSONObject(jsonData)
-//          val main = jsonObject.getJSONObject("main")
-//          val temp = main.getDouble("temp")
-//          val weatherDescription = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description")
-//
-//          val recommendation = when {
-//            temp < 10 -> "It's a chilly ${temp}°C with ${weatherDescription}! Explore Mykonos’ museums 🏛️, cozy up in a local taverna 🍷, or enjoy a spa day! 💆‍♂️"
-//            temp in 10.0..20.0 -> "The temperature is ${temp}°C with ${weatherDescription}. A perfect time for a scenic walk through Mykonos Town 🌆 or a sunset view from Little Venice! 🌅"
-//            temp in 20.0..30.0 -> "It's a warm ${temp}°C in Mykonos! Enjoy a beach day at Paradise Beach 🏖️, try water sports 🌊, or go on a boat tour to Delos! ⛵"
-//            else -> "It's a hot ${temp}°C with ${weatherDescription}! Cool off at Super Paradise Beach 🏝️, grab a refreshing cocktail 🍹, or visit a luxurious beach club for a chill day! 🎶"
-//          }
-//
-//          // Update UI on the main thread
-//          tvCoffeeRecommendation.text = recommendation
-//        } else {
-//          tvCoffeeRecommendation.text = "Weather data not available for Mykonos"
-//        }
-//      } catch (e: Exception) {
-//        e.printStackTrace()
-//        tvCoffeeRecommendation.text = "Weather data not available for Mykonos"
-//      }
-//    }
-//  }
-
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,

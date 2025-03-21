@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.mymyko" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/coffee_light</item>
+        <item name="colorPrimary">@color/light_mykonos</item>
     </style>
 
     <style name="Theme.mymyko" parent="Base.Theme.mymyko" />
