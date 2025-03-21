@@ -96,16 +96,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Enable "My Location" button
+        val mykonosCenter = LatLng(37.4467, 25.3289)
+        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(mykonosCenter, 12f))
+
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             mMap?.isMyLocationEnabled = true
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
-
-        // Center the map on Mykonos initially
-        val mykonosCenter = LatLng(37.4467, 25.3289)
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(mykonosCenter, 12f))
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
