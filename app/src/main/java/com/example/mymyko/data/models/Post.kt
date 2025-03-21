@@ -14,4 +14,6 @@ data class Post(
   val likedUsers: MutableList<String> = mutableListOf(),
   var comments: MutableList<Comment> = mutableListOf(),
   val place_name: String = "",
+  val place_lat: Double = 0.0,
+  val place_lng: Double = 0.0,
 ) : Serializable

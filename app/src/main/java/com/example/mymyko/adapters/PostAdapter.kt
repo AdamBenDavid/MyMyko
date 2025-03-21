@@ -2,6 +2,7 @@ package com.example.mymyko.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -104,10 +106,21 @@ class PostAdapter(
     if (post.place_name.isNotEmpty()) {
       holder.postLocation.visibility = View.VISIBLE
       holder.postLocation.text = post.place_name
-    } else {
-      holder.postLocation.visibility = View.GONE  // Hide if no place name
-    }
 
+      //  Make location name clickable to open map
+      holder.postLocation.setOnClickListener {
+        val bundle = Bundle().apply {
+          putDouble("focus_lat", post.place_lat)
+          putDouble("focus_lng", post.place_lng)
+        }
+
+        val navController = Navigation.findNavController(holder.itemView)
+        navController.navigate(R.id.action_home_to_map, bundle)
+      }
+
+    } else {
+      holder.postLocation.visibility = View.GONE
+    }
 
     holder.likeCount.text = post.likes.toString()
     updateLikeUI(holder, post, currentUserId)

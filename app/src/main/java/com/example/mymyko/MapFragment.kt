@@ -25,10 +25,12 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.app.ActivityCompat
+import com.example.mymyko.data.models.Post
 import com.google.android.gms.location.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -38,6 +40,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private var currentLocationMarker: Marker? = null
+
+    // focus on the post location
+    private var focusedLat: Double? = null
+    private var focusedLng: Double? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +67,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         fetchWeatherAndUpdateRecommendation() // Fetch weather data when the map is created
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        arguments?.let {
+            focusedLat = it.getDouble("focus_lat", 0.0)
+            focusedLng = it.getDouble("focus_lng", 0.0)
+        }
 
         return view
     }
@@ -105,6 +116,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
+
+        focusedLat?.let { lat ->
+            focusedLng?.let { lng ->
+                val focusedPosition = LatLng(lat, lng)
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(focusedPosition, 15f))
+            }
+        }
+        loadMarkersFromFirestore()
     }
 
 
@@ -159,4 +178,36 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
+
+    private fun loadMarkersFromFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("posts")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val post = document.toObject(Post::class.java)
+
+                    if (post.place_lat != 0.0 && post.place_lng != 0.0 && post.place_name.isNotEmpty()) {
+                        val position = LatLng(post.place_lat, post.place_lng)
+
+                        val markerOptions = MarkerOptions()
+                            .position(position)
+                            .title(post.place_name)
+                            .snippet(post.description)
+
+                        val marker = mMap?.addMarker(markerOptions)
+
+                        if (post.place_lat == focusedLat && post.place_lng == focusedLng) {
+                            marker?.showInfoWindow()
+                            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to load markers", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 }
