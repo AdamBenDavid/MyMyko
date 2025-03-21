@@ -23,6 +23,10 @@
     <action
         android:id="@+id/action_homeFragment_to_cafeMapFragment"
         app:destination="@id/mapFragment" />
+
+    <action
+        android:id="@+id/action_home_to_map"
+        app:destination="@id/mapFragment" />
   </fragment>
 
   <fragment

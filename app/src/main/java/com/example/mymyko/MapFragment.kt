@@ -41,6 +41,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationCallback: LocationCallback
     private var currentLocationMarker: Marker? = null
 
+    // focus on the post location
+    private var focusedLat: Double? = null
+    private var focusedLng: Double? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,6 +67,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         fetchWeatherAndUpdateRecommendation() // Fetch weather data when the map is created
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        arguments?.let {
+            focusedLat = it.getDouble("focus_lat", 0.0)
+            focusedLng = it.getDouble("focus_lng", 0.0)
+        }
 
         return view
     }
@@ -106,6 +115,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             mMap?.isMyLocationEnabled = true
         } else {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
+
+        focusedLat?.let { lat ->
+            focusedLng?.let { lng ->
+                val focusedPosition = LatLng(lat, lng)
+                mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(focusedPosition, 15f))
+            }
         }
         loadMarkersFromFirestore()
     }
@@ -171,15 +187,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 for (document in documents) {
                     val post = document.toObject(Post::class.java)
 
-                    // Only show if valid coordinates
                     if (post.place_lat != 0.0 && post.place_lng != 0.0 && post.place_name.isNotEmpty()) {
                         val position = LatLng(post.place_lat, post.place_lng)
-                        val marker = MarkerOptions()
+
+                        val markerOptions = MarkerOptions()
                             .position(position)
                             .title(post.place_name)
                             .snippet(post.description)
 
-                        mMap?.addMarker(marker)
+                        val marker = mMap?.addMarker(markerOptions)
+
+                        if (post.place_lat == focusedLat && post.place_lng == focusedLng) {
+                            marker?.showInfoWindow()
+                            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+                        }
                     }
                 }
             }
@@ -187,5 +208,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Toast.makeText(requireContext(), "Failed to load markers", Toast.LENGTH_SHORT).show()
             }
     }
+
 
 }
