@@ -25,10 +25,12 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.app.ActivityCompat
+import com.example.mymyko.data.models.Post
 import com.google.android.gms.location.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -105,6 +107,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
+        loadMarkersFromFirestore()
     }
 
 
@@ -159,4 +162,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
+
+    private fun loadMarkersFromFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("posts")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val post = document.toObject(Post::class.java)
+
+                    // Only show if valid coordinates
+                    if (post.place_lat != 0.0 && post.place_lng != 0.0 && post.place_name.isNotEmpty()) {
+                        val position = LatLng(post.place_lat, post.place_lng)
+                        val marker = MarkerOptions()
+                            .position(position)
+                            .title(post.place_name)
+                            .snippet(post.description)
+
+                        mMap?.addMarker(marker)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to load markers", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 }
