@@ -224,7 +224,6 @@ class UploadFragment : Fragment() {
             }
         }
         val apiKey = getString(R.string.google_places_api_key)
-        Log.d("apikeyssss", "$apiKey")
         if (!Places.isInitialized()) {
             Places.initialize(requireContext().applicationContext, apiKey)
         }

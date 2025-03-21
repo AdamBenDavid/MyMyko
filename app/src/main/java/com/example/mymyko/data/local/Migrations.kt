@@ -43,7 +43,6 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
 
 val MIGRATION_5_6 = object : Migration(5, 6) {
   override fun migrate(database: SupportSQLiteDatabase) {
-
     database.execSQL("ALTER TABLE user DROP COLUMN profileImageUrl")
     database.execSQL("ALTER TABLE user ADD COLUMN profileImageUrl TEXT")
     database.execSQL("ALTER TABLE user ADD COLUMN image BLOB")
