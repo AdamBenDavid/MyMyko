@@ -99,32 +99,24 @@
     </LinearLayout>
   </androidx.cardview.widget.CardView>
 
-  <!-- Posts Section -->
-  <androidx.cardview.widget.CardView
-      android:id="@+id/posts_container"
-      android:layout_width="match_parent"
+  <!-- SwipeRefresh + RecyclerView Grid -->
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipeRefreshLayout_profile"
+      android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_margin="20dp"
-      app:cardCornerRadius="0dp"
-      app:cardElevation="0dp"
-      app:cardBackgroundColor="@android:color/transparent"
       app:layout_constraintTop_toBottomOf="@id/profile_card"
-      app:layout_constraintBottom_toTopOf="@id/navbar_container">
+      app:layout_constraintBottom_toTopOf="@id/navbar_container"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout_profile"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/recycler_view_profile"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          app:cardBackgroundColor="@color/background_color"
-          android:clipToPadding="false"
-       />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-  </androidx.cardview.widget.CardView>
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:background="@android:color/transparent" />
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
   <!-- Navigation Bar -->
   <FrameLayout

@@ -1,91 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:layout_margin="8dp"
-  app:cardCornerRadius="8dp">
-
-  <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp">
 
-    <!-- תמונת הפוסט -->
-    <ImageView
-      android:id="@+id/post_image_profile"
-      android:layout_width="match_parent"
-      android:layout_height="200dp"
-      android:scaleType="centerCrop"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:layout_editor_absoluteY="47dp" />
-
-    <!-- תיאור הפוסט -->
-    <TextView
-      android:id="@+id/post_description_profile"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="14sp"
-      android:paddingTop="8dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/post_image_profile" />
-
-    <!-- Like Section -->
-    <LinearLayout
-      android:id="@+id/like_section_profile"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:paddingTop="8dp"
-      app:layout_constraintTop_toBottomOf="@id/post_description_profile"
-      app:layout_constraintStart_toStartOf="parent">
-
-      <ImageView
-        android:id="@+id/like_button_profile"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_heart_outline"
-        android:layout_marginEnd="8dp" />
-
-      <TextView
-        android:id="@+id/like_count_profile"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="0"
-        android:textSize="16sp" />
-    </LinearLayout>
+        android:padding="8dp">
 
-    <Button
-      android:id="@+id/delete_button"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginEnd="8dp"
-      android:background="@drawable/delete"
-      android:contentDescription="Delete post"
-      android:padding="8dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/post_image_profile"
-      app:layout_constraintVertical_bias="1.0" />
+        <!-- תמונת הפוסט -->
+        <ImageView
+            android:id="@+id/post_image_profile"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="47dp" />
 
-    <Button
-      android:id="@+id/edit_button"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginEnd="8dp"
-      android:text="edit"
-      android:contentDescription="Edit post"
-      android:padding="8dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/delete_button"
-      app:layout_constraintTop_toBottomOf="@id/post_image_profile"
-      app:layout_constraintVertical_bias="1.0" />
+        <!-- תיאור הפוסט -->
+        <TextView
+            android:id="@+id/post_description_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/post_image_profile" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Like Section -->
+        <LinearLayout
+            android:id="@+id/like_section_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/post_description_profile">
+
+            <ImageView
+                android:id="@+id/like_button_profile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_heart_outline" />
+
+            <TextView
+                android:id="@+id/like_count_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/like_section_profile">
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/delete"
+                android:contentDescription="Delete post"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/post_image_profile"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <Button
+                android:id="@+id/edit_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:drawable/ic_menu_edit"
+                android:contentDescription="Edit post"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/delete_button"
+                app:layout_constraintTop_toBottomOf="@id/post_image_profile"
+                app:layout_constraintVertical_bias="1.0" />
+
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
