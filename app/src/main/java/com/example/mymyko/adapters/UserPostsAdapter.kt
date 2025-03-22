@@ -26,8 +26,7 @@ class UserPostsAdapter(
 
   // onCreateViewHolder- create view for 1 line
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserPostViewHolder {
-    val view = LayoutInflater.from(parent.context)
-      .inflate(R.layout.item_user_post, parent, false)
+    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_post, parent, false)
     return UserPostViewHolder(view)
   }
 
