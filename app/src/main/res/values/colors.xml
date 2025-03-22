@@ -3,9 +3,16 @@
     <color name="nav_text_tint">#03A9F4</color>
     <color name="white">#FFFFFF</color>
     <color name="background_color">#E0F7FA</color>
-    <color name="primary">#0091EA</color>
+
     <color name="black">#212121</color>
     <color name="light_mykonos">#4FC3F7</color>
     <color name="mykonos_blue">#007ACC</color>
     <color name="gray">#B0B0B0</color>
+
+    //new colors
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="sea_blue">#0288D1</color>
+    <color name="text_primary">#212121</color>
+    <color name="island_background">#F0F9FF</color>
 </resources>

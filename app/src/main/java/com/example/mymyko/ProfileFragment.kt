@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -87,7 +88,7 @@ class ProfileFragment : Fragment() {
     }
 
     recyclerView = view.findViewById(R.id.recycler_view_profile)
-    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
     profilePostAdapter = ProfilePostAdapter(postList, requireContext())
     recyclerView.adapter = profilePostAdapter
 

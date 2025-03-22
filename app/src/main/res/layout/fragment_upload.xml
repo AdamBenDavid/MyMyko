@@ -52,7 +52,8 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:boxBackgroundMode="filled"
-      app:boxStrokeColor="@color/primary">
+      app:boxStrokeColor="@color/primary"
+      android:gravity="top|start">
 
     <AutoCompleteTextView
         android:id="@+id/location_input"
@@ -60,6 +61,7 @@
         android:layout_height="wrap_content"
         android:hint="Search for a place..."
         android:inputType="text"
+        android:minHeight="50dp"
         android:textColor="@color/black"
         android:textColorHint="@color/gray" />
   </com.google.android.material.textfield.TextInputLayout>
