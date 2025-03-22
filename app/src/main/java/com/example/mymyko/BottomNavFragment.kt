@@ -15,10 +15,11 @@ class BottomNavFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val view = inflater.inflate(R.layout.fragment_bottom_nav, container, false)
+    val view = inflater.inflate(R.layout.fragment_bottom_nav, container, false) //gets xml file
     val navigationBar = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
     val currentPage = arguments?.getString("current_page")
 
+    // circle by current page
     when (currentPage) {
       "home" -> navigationBar.selectedItemId = R.id.home
       "profile" -> navigationBar.selectedItemId = R.id.profile
@@ -26,6 +27,8 @@ class BottomNavFragment : Fragment() {
       "map" -> navigationBar.selectedItemId = R.id.map
     }
 
+    // navigate by item's click
+    // call HandleMove
     navigationBar.setOnItemSelectedListener { item: MenuItem ->
       when (item.itemId) {
         R.id.home -> {
@@ -59,6 +62,7 @@ class BottomNavFragment : Fragment() {
     return view
   }
 
+  // the navigate manager
   fun handleMove(currentPage: String?, newPage: String) {
     when (currentPage) {
       "home" -> when (newPage) {
@@ -90,7 +94,4 @@ class BottomNavFragment : Fragment() {
       }
     }
   }
-
-
-
 }

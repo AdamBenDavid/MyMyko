@@ -2,6 +2,7 @@ package com.example.mymyko.data.local
 
 import androidx.room.*
 
+// user dao
 @Dao
 interface UserDao {
   @Insert

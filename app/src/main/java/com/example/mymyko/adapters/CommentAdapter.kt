@@ -18,18 +18,21 @@ class CommentAdapter(
   private val onUsernameClick: (String) -> Unit
 ) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
+//  view holder- holds 1 line view
   class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val commentAvatar: CircleImageView = view.findViewById(R.id.comment_avatar)
     val commentUserName: TextView = view.findViewById(R.id.comment_user_name)
     val commentText: TextView = view.findViewById(R.id.comment_text)
   }
 
+  // onCreareViewHolder- create view for 1 line
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
     val view = LayoutInflater.from(parent.context)
       .inflate(R.layout.item_comment, parent, false)
     return CommentViewHolder(view)
   }
 
+  // on bind view- fill the view in data (from firebase)
   override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
     val comment = commentList[position]
     holder.commentText.text = comment.text
@@ -78,5 +81,6 @@ class CommentAdapter(
       }
   }
 
+  // how many items in a list
   override fun getItemCount(): Int = commentList.size
 }

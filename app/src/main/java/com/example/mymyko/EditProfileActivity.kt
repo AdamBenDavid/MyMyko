@@ -29,7 +29,7 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 
 class EditProfileActivity : AppCompatActivity() {
-
+  // variables without init
   private lateinit var profileImageView: ImageView
   private lateinit var etFirstName: EditText
   private lateinit var etLastName: EditText
@@ -44,6 +44,7 @@ class EditProfileActivity : AppCompatActivity() {
   private var selectedImageUri: Uri? = null
   private var oldProfileImageUrl: String? = null
 
+  // pick image
   private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
     uri?.let {
       selectedImageUri = it
@@ -54,11 +55,12 @@ class EditProfileActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.fragment_edit_profile)
-    supportActionBar?.apply {
+    supportActionBar?.apply { // design
       title = "Edit Profile"
       setDisplayHomeAsUpEnabled(true)
     }
 
+    // get objects
     profileImageView = findViewById(R.id.edit_profile_image)
     etFirstName = findViewById(R.id.edit_et_firstname)
     etLastName = findViewById(R.id.edit_et_lastname)
@@ -67,16 +69,18 @@ class EditProfileActivity : AppCompatActivity() {
     btnSave = findViewById(R.id.edit_btn_save)
     btnCancel = findViewById(R.id.edit_btn_cancel)
 
-    loadCurrentProfile()
+    loadCurrentProfile() // load user from firestore
 
     profileImageView.setOnClickListener {
       pickImageLauncher.launch("image/*")
     }
 
+    // save edits
     btnSave.setOnClickListener {
       saveProfile()
     }
 
+    // cancel
     btnCancel.setOnClickListener {
       setResult(RESULT_CANCELED)
       finish()
@@ -130,6 +134,7 @@ class EditProfileActivity : AppCompatActivity() {
       }
   }
 
+  // save edits
   private fun saveProfile() {
     val userId = auth.currentUser?.uid ?: return
     val updatedFirstName = etFirstName.text.toString().trim()
@@ -187,6 +192,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
   }
 
+  // save updates to firestore
   private fun updateProfileInFirestore(userId: String, updates: Map<String, Any>) {
     Log.d("EditProfileActivity", "Updating Firestore with: $updates")
     db.collection("users").document(userId)
@@ -211,6 +217,8 @@ class EditProfileActivity : AppCompatActivity() {
       }
   }
 
+  // upload image to cloudinary
+  // steps- local and then cloudinary
   private fun uploadImageToCloudinary(
     imageUri: Uri,
     onSuccess: (String) -> Unit,
@@ -251,6 +259,7 @@ class EditProfileActivity : AppCompatActivity() {
     })
   }
 
+  // step1- save image local
   private fun saveImageLocally(uri: Uri): String? {
     return try {
       val inputStream = contentResolver.openInputStream(uri)
@@ -273,6 +282,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
   }
 
+  // delete old image
   private fun deleteOldImage(oldImageUrl: String) {
     val publicId = getPublicId(oldImageUrl)
     if (publicId == null) {

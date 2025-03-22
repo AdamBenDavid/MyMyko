@@ -20,7 +20,7 @@
         android:src="@drawable/profile_icon"
         android:elevation="4dp"/>
 
-    <!-- Text indicating change image -->
+    <!-- change image -->
     <TextView
         android:id="@+id/edit_change_image_text"
         android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
         android:inputType="text"
         android:layout_marginTop="8dp"/>
 
-    <!-- Save Button -->
+    <!-- Save -->
     <Button
         android:id="@+id/edit_btn_save"
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
         android:text="Save Changes"
         android:layout_marginTop="16dp"/>
 
-    <!-- Cancel Button (New) -->
+    <!-- Cancel -->
     <Button
         android:id="@+id/edit_btn_cancel"
         android:layout_width="match_parent"

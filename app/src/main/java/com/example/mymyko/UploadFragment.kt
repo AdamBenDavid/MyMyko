@@ -35,14 +35,13 @@ import java.io.FileOutputStream
 import android.widget.Filter
 
 class UploadFragment : Fragment() {
-
     private var selectedImageUri: Uri? = null
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var selectedPlaceName: String? = null
     private var selectedPlaceLatLng: Pair<Double, Double>? = null
 
-    // Launcher for picking an image
+    //picking an image
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {

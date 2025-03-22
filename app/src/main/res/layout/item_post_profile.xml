@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <!-- תמונת הפוסט -->
         <ImageView
             android:id="@+id/post_image_profile"
             android:layout_width="match_parent"
@@ -23,7 +22,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteY="47dp" />
 
-        <!-- תיאור הפוסט -->
         <TextView
             android:id="@+id/post_description_profile"
             android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/post_image_profile" />
 
-        <!-- Like Section -->
         <LinearLayout
             android:id="@+id/like_section_profile"
             android:layout_width="wrap_content"

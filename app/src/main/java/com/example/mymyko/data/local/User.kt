@@ -3,6 +3,7 @@ package com.example.mymyko.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// user entity
 @Entity(tableName = "user")
 data class User(
   @PrimaryKey(autoGenerate = false) val id: String = "",

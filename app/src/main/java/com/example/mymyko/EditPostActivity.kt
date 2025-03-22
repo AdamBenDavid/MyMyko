@@ -28,38 +28,42 @@ class EditPostActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.fragment_edit_post)
 
+    // get elements
     ivPostImage = findViewById(R.id.ivPostImage)
     etDescription = findViewById(R.id.etDescription)
     btnSave = findViewById(R.id.btnSave)
     btnCancel = findViewById(R.id.btnCancel)
 
+    // get the post
     post = intent.getSerializableExtra("post") as? Post ?: run {
       Toast.makeText(this, "No post data found", Toast.LENGTH_SHORT).show()
       finish()
       return
     }
 
+    // show post image and data
     Glide.with(this)
       .load(post.image_path)
       .into(ivPostImage)
-
-
     etDescription.setText(post.description)
 
+    // save edits in firestore
     btnSave.setOnClickListener {
       val updatedDescription = etDescription.text.toString().trim()
       if (updatedDescription.isEmpty()) {
         etDescription.error = "Description cannot be empty"
         return@setOnClickListener
       }
-      updatePostDescription(updatedDescription)
+      updatePostDescription(updatedDescription) // update post data
     }
 
+    // cancel
     btnCancel.setOnClickListener {
       finish()
     }
   }
 
+  // update firebase
   private fun updatePostDescription(newDescription: String) {
     FirebaseFirestore.getInstance().collection("posts")
       .document(post.id)

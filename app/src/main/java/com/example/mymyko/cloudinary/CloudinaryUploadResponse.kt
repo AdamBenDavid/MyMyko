@@ -1,6 +1,6 @@
 package com.example.mymyko.cloudinary
 
-// This data class matches the JSON response from Cloudinary.
+// This data class matches the JSON response from Cloudinary
 data class CloudinaryUploadResponse(
     val public_id: String?,
     val version: Long?,

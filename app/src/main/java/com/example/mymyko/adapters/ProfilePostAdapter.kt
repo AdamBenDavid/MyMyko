@@ -22,6 +22,7 @@ import java.io.File
 class ProfilePostAdapter(private val postList: MutableList<Post>, private val context: Context) :
   RecyclerView.Adapter<ProfilePostAdapter.ProfilePostViewHolder>() {
 
+  //  view holder- holds 1 line view
   class ProfilePostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val postImage: ImageView = view.findViewById(R.id.post_image_profile)
     val postDescription: TextView = view.findViewById(R.id.post_description_profile)
@@ -31,17 +32,19 @@ class ProfilePostAdapter(private val postList: MutableList<Post>, private val co
     val editButton: Button = view.findViewById(R.id.edit_button)
   }
 
+  // onCreateViewHolder- create view for 1 line
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfilePostViewHolder {
     val view = LayoutInflater.from(parent.context)
       .inflate(R.layout.item_post_profile, parent, false)
     return ProfilePostViewHolder(view)
   }
 
+  // on bind view- fill the view in data (from firebase)
   override fun onBindViewHolder(holder: ProfilePostViewHolder, position: Int) {
     val post = postList[position]
     val currentUser = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-    // לחיצה על כפתור העריכה – מעבר למסך עדכון תמונה (UpdateImageActivity)
+    // move to edit image fragment
     holder.editButton.setOnClickListener {
       val intent = Intent(context, UpdateImageActivity::class.java)
       intent.putExtra("post", post)
@@ -49,24 +52,24 @@ class ProfilePostAdapter(private val postList: MutableList<Post>, private val co
       Log.d("ProfilePostAdapter", "Edit button clicked - launching UpdateImageActivity")
     }
 
-    // טעינת תמונת הפוסט מהנתיב המקומי (הנתיב נשמר בשדה image_path)
+    // load post's picture from local path (image_path)
     Glide.with(holder.itemView.context)
       .load(post.image_path)
       .into(holder.postImage)
 
-    // הצגת תיאור הפוסט
+    // post description
     holder.postDescription.text = post.description
 
-    // הצגת מספר הלייקים ושינוי UI בהתאם
+    // show like count
     holder.likeCount.text = post.likes.toString()
     updateLikeUI(holder, post, currentUser)
 
-    // לחיצה על כפתור לייק
+    // on like click
     holder.likeButton.setOnClickListener {
       toggleLike(holder, post, currentUser)
     }
 
-    // מחיקת פוסט – רק אם המשתמש הנוכחי הוא הבעלים
+    // delete post (only the post owner)
     holder.deletePost.setOnClickListener {
       FirebaseFirestore.getInstance().collection("posts").document(post.id).delete()
         .addOnSuccessListener {
@@ -80,8 +83,10 @@ class ProfilePostAdapter(private val postList: MutableList<Post>, private val co
     }
   }
 
+  // items count
   override fun getItemCount(): Int = postList.size
 
+  // update like- UI
   private fun updateLikeUI(holder: ProfilePostViewHolder, post: Post, userId: String) {
     val isLiked = post.likedUsers.contains(userId)
     holder.likeButton.setImageResource(
@@ -90,6 +95,7 @@ class ProfilePostAdapter(private val postList: MutableList<Post>, private val co
     holder.likeCount.text = post.likes.toString()
   }
 
+  // on like\ unlike
   private fun toggleLike(holder: ProfilePostViewHolder, post: Post, userId: String) {
     val db = FirebaseFirestore.getInstance().collection("posts").document(post.id)
     val isLiked = post.likedUsers.contains(userId)

@@ -3,6 +3,7 @@ package com.example.mymyko.data.repository
 import com.example.mymyko.data.local.UserDao
 import com.example.mymyko.data.local.User
 
+// the actions on user model (get from ROOM Dao)
 class UserRepository(private val userDao: UserDao) {
 
   suspend fun insertUser(user: User) {

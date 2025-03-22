@@ -37,6 +37,7 @@ class UpdateImageActivity : AppCompatActivity() {
   private lateinit var post: Post
   private var selectedImageUri: Uri? = null
 
+  // load image from gallery
   private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
     uri?.let {
       selectedImageUri = it
@@ -54,7 +55,7 @@ class UpdateImageActivity : AppCompatActivity() {
     btnSave = findViewById(R.id.btnSave)
     btnCancel = findViewById(R.id.btnCancel)
 
-    // Get post data from the Intent
+    // get post data from the Intent
     post = intent.getSerializableExtra("post") as? Post ?: run {
       Toast.makeText(this, "No post data found", Toast.LENGTH_SHORT).show()
       finish()
@@ -70,11 +71,12 @@ class UpdateImageActivity : AppCompatActivity() {
     // Display the current description
     etDescription.setText(post.description)
 
+    // choose imgae from gallery
     btnChooseImage.setOnClickListener {
-      // Open gallery to choose a new image
       pickImageLauncher.launch("image/*")
     }
 
+    // on save
     btnSave.setOnClickListener {
       val updatedDescription = etDescription.text.toString().trim()
       if (updatedDescription.isEmpty()) {
@@ -82,14 +84,14 @@ class UpdateImageActivity : AppCompatActivity() {
         return@setOnClickListener
       }
       if (selectedImageUri != null) {
-        // If a new image is selected, upload it to Cloudinary.
+        // if a new image is selected, upload it to Cloudinary.
         uploadImageToCloudinary(selectedImageUri!!, onSuccess = { secureUrl ->
           updatePost(post.id, updatedDescription, secureUrl)
         }, onFailure = { errorMsg ->
           Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show()
         })
       } else {
-        // Update only the description
+        // update only the description
         updatePost(post.id, updatedDescription, null)
       }
     }
@@ -99,7 +101,7 @@ class UpdateImageActivity : AppCompatActivity() {
     }
   }
 
-  // Saves the selected image locally (temporary) to get a File reference.
+  // Saves the selected image locally (temporary) to get a File reference
   private fun saveImageLocally(uri: Uri): String? {
     return try {
       val inputStream = contentResolver.openInputStream(uri)

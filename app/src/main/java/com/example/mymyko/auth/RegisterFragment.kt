@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class RegisterFragment : Fragment() {
+  // form fields
   private lateinit var etEmail: EditText
   private lateinit var etFirstName: EditText
   private lateinit var etLastName: EditText
@@ -33,6 +34,7 @@ class RegisterFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    //load xml
     val view = inflater.inflate(R.layout.fragment_register, container, false)
 
     etFirstName = view.findViewById(R.id.firstname_field)
@@ -45,14 +47,17 @@ class RegisterFragment : Fragment() {
 
     auth = Firebase.auth
 
+    // on click "signup"
     btnSignUp.setOnClickListener { signUpUser() }
 
+    // on click "login" - navigate to login page
     tvRedirectLogin.setOnClickListener {
       findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
     return view
   }
 
+  // register user
   private fun signUpUser() {
     val firstName = etFirstName.text.toString().trim()
     val lastName = etLastName.text.toString().trim()
@@ -65,16 +70,20 @@ class RegisterFragment : Fragment() {
       return
     }
 
+    // create user in fireBase
     auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
       if (task.isSuccessful) {
         val user = auth.currentUser
         user?.let {
-          saveUserToFirestore(it, firstName, lastName, country)
+          saveUserToFirestore(it, firstName, lastName, country) //save user to firestore
         }
         Toast.makeText(requireContext(), "Successfully Signed Up", Toast.LENGTH_SHORT).show()
-        auth.signOut()
+        auth.signOut() // logout user
+
+        //navigate to login page
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
       } else {
+        //if fail
         Log.w("Register", "createUserWithEmail:failure", task.exception)
         Toast.makeText(requireContext(), "Sign Up Failed", Toast.LENGTH_SHORT).show()
       }

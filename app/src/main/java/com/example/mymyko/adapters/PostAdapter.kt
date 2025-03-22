@@ -31,6 +31,7 @@ class PostAdapter(
   private val context: Context
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
+  //  view holder- holds 1 line view
   class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val profileImage: CircleImageView = view.findViewById(R.id.profile_picture_in_post)
     val userName: TextView = view.findViewById(R.id.post_user_name)
@@ -44,12 +45,14 @@ class PostAdapter(
     val rvComments: RecyclerView = view.findViewById(R.id.rvComments)
   }
 
+  // onCreareViewHolder- create view for 1 line
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
     val view = LayoutInflater.from(parent.context)
       .inflate(R.layout.item_post, parent, false)
     return PostViewHolder(view)
   }
 
+  // on bind view- fill the view in data (from firebase)
   override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
     val post = postList[position]
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -107,7 +110,7 @@ class PostAdapter(
       holder.postLocation.visibility = View.VISIBLE
       holder.postLocation.text = post.place_name
 
-      //  Make location name clickable to open map
+      //  click to open a map
       holder.postLocation.setOnClickListener {
         val bundle = Bundle().apply {
           putDouble("focus_lat", post.place_lat)
@@ -144,7 +147,7 @@ class PostAdapter(
     holder.btnSendComment.setOnClickListener {
       val commentText = holder.etComment.text.toString().trim()
       if (commentText.isEmpty()) {
-        Toast.makeText(context, "אנא הכנס תגובה", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Please add a comment", Toast.LENGTH_SHORT).show()
         return@setOnClickListener
       }
       val newComment = Comment(
@@ -158,7 +161,7 @@ class PostAdapter(
         .document(post.id)
         .update("comments", updatedComments)
         .addOnSuccessListener {
-          Toast.makeText(context, "תגובה נשלחה", Toast.LENGTH_SHORT).show()
+          Toast.makeText(context, "Comment added", Toast.LENGTH_SHORT).show()
           holder.etComment.text.clear()
           post.comments = updatedComments
           holder.rvComments.adapter = CommentAdapter(updatedComments) { userId ->
@@ -168,10 +171,11 @@ class PostAdapter(
           }
         }
         .addOnFailureListener {
-          Toast.makeText(context, "שגיאה בשליחת תגובה", Toast.LENGTH_SHORT).show()
+          Toast.makeText(context, "Error adding a comment", Toast.LENGTH_SHORT).show()
         }
     }
 
+    // show all comments under a post
     holder.rvComments.layoutManager = LinearLayoutManager(context)
     holder.rvComments.adapter = CommentAdapter(post.comments) { userId ->
       val intent = Intent(context, UserProfileActivity::class.java)
@@ -180,8 +184,10 @@ class PostAdapter(
     }
   }
 
+  // how many items in a list
   override fun getItemCount(): Int = postList.size
 
+  // like\ unlike- UI
   private fun updateLikeUI(holder: PostViewHolder, post: Post, userId: String) {
     val isLiked = post.likedUsers.contains(userId)
     holder.likeButton.setImageResource(
@@ -190,6 +196,7 @@ class PostAdapter(
     holder.likeCount.text = post.likes.toString()
   }
 
+  // like\ unlike- FIREBASE
   private fun toggleLike(holder: PostViewHolder, post: Post, userId: String) {
     val db = FirebaseFirestore.getInstance().collection("posts").document(post.id)
     val isLiked = post.likedUsers.contains(userId)

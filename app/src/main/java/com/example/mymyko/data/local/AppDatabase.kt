@@ -6,16 +6,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+// main ROOM class
 @Database(entities = [User::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
-  abstract fun userDao(): UserDao
+  abstract fun userDao(): UserDao // DAO object
 
-  companion object {
+  companion object { // ROOM singleton
     @Volatile private var INSTANCE: AppDatabase? = null
 
     fun getDatabase(context: Context): AppDatabase {
       return INSTANCE ?: synchronized(this) {
-        val instance = Room.databaseBuilder(
+        val instance = Room.databaseBuilder( // create db
           context.applicationContext,
           AppDatabase::class.java,
           "mymyco"
