@@ -28,14 +28,12 @@
         android:padding="20dp"
         android:gravity="center_horizontal">
 
-      <!-- Horizontal row: Profile Image + Text Info -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
           android:gravity="center_vertical">
 
-        <!-- Profile Image -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
             android:layout_width="100dp"
@@ -46,7 +44,6 @@
             android:elevation="6dp"
             android:layout_marginEnd="16dp" />
 
-        <!-- Vertical stack: Name, Location, Email -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -82,7 +79,6 @@
         </LinearLayout>
       </LinearLayout>
 
-      <!-- Edit Profile Button -->
       <Button
           android:id="@+id/edit_profile_picture_text"
           android:layout_width="wrap_content"
@@ -99,7 +95,6 @@
     </LinearLayout>
   </androidx.cardview.widget.CardView>
 
-  <!-- SwipeRefresh + RecyclerView Grid -->
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
       android:id="@+id/swipeRefreshLayout_profile"
       android:layout_width="0dp"
@@ -118,7 +113,6 @@
         android:background="@android:color/transparent" />
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-  <!-- Navigation Bar -->
   <FrameLayout
       android:id="@+id/navbar_container"
       android:layout_width="match_parent"

@@ -21,19 +21,16 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    enableEdgeToEdge()
-    setContentView(R.layout.activity_main)
+    enableEdgeToEdge() // UI on all screen
+    setContentView(R.layout.activity_main) // load main xml file
     ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
       val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
       v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
       insets
     }
 
+    // nav controller- navigation between fragments
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment
     navController = navHostFragment.navController
-
-    val db = Firebase.firestore
-
-
   }
 }

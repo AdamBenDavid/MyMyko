@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-  <!-- Full-Screen Background Image (NO Blur) -->
   <ImageView
       android:id="@+id/background"
       android:layout_width="match_parent"
@@ -17,7 +16,6 @@
       android:src="@drawable/background"
       android:contentDescription="Background Image"/>
 
-  <!-- Welcome Title -->
   <TextView
       android:id="@+id/home_fragment"
       android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintVertical_bias="0.15"/>
 
-  <!-- Login Card (Holds Email, Password, and Buttons) -->
   <androidx.cardview.widget.CardView
       android:id="@+id/loginCard"
       android:layout_width="0dp"
@@ -53,7 +50,6 @@
         android:padding="20dp"
         android:orientation="vertical">
 
-      <!-- Email Input -->
       <EditText
           android:id="@+id/email"
           android:layout_width="match_parent"
@@ -67,7 +63,6 @@
           android:elevation="2dp"
           android:layout_marginBottom="12dp"/>
 
-      <!-- Password Input -->
       <EditText
           android:id="@+id/password"
           android:layout_width="match_parent"
@@ -81,7 +76,6 @@
           android:elevation="2dp"
           android:layout_marginBottom="20dp"/>
 
-      <!-- Login Button -->
       <Button
           android:id="@+id/submit"
           android:layout_width="match_parent"
@@ -93,7 +87,6 @@
           android:elevation="6dp"
           android:layout_marginBottom="10dp"/>
 
-      <!-- OR Separator -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -129,7 +122,6 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="8dp"/>
 
-      <!-- Register Button -->
       <TextView
           android:id="@+id/register_button"
           android:layout_width="match_parent"

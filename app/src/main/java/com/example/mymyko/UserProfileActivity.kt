@@ -18,7 +18,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 import android.widget.TextView
 import com.google.firebase.firestore.Query
 
-
 class UserProfileActivity : AppCompatActivity() {
 
   private lateinit var ivProfile: CircleImageView

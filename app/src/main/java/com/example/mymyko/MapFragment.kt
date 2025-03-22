@@ -60,7 +60,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
-        val childFragment = BottomNavFragment()
+        val childFragment = BottomNavFragment() // add bottom nav
         val bundle = Bundle()
         bundle.putString("current_page", "map")
         childFragment.arguments = bundle
@@ -70,28 +70,34 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         tvWeatherRecommendation = view.findViewById(R.id.tvWeatherRecommendation)
 
+        // init google map
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         fetchWeatherAndUpdateRecommendation() // Fetch weather data when the map is created
 
+        // init gps service
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+        // init places api
         val apiKey = getString(R.string.google_places_api_key)
         if (!Places.isInitialized()) {
             Places.initialize(requireContext().applicationContext, apiKey)
         }
 
+        // check screen focus
         arguments?.let {
             focusedLat = it.getDouble("focus_lat", 0.0)
             focusedLng = it.getDouble("focus_lng", 0.0)
         }
 
+        // auto complete on search
         setupAutocomplete(view)
 
         return view
     }
 
+    // get current user location
     @SuppressLint("MissingPermission")
     private fun getUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -117,15 +123,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        // init map on Mykonos
         val mykonosCenter = LatLng(37.4467, 25.3289)
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(mykonosCenter, 12f))
 
+        // show user location if have permission
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             mMap?.isMyLocationEnabled = true
@@ -133,15 +139,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
 
+        // if user do focus on map
         focusedLat?.let { lat ->
             focusedLng?.let { lng ->
                 val focusedPosition = LatLng(lat, lng)
                 mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(focusedPosition, 15f))
             }
         }
+        // show posts on map
         loadMarkersFromFirestore()
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
@@ -154,8 +161,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
+    // show weather from "OpenWeather"
     private fun fetchWeatherAndUpdateRecommendation() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -169,7 +175,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     response.body?.string()
                 }
 
-                if (jsonData != null) {
+                if (jsonData != null) { // if success
                     val jsonObject = JSONObject(jsonData)
                     val main = jsonObject.getJSONObject("main")
                     val temp = main.getDouble("temp")
@@ -195,6 +201,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    // show posts on map from firestore
     private fun loadMarkersFromFirestore() {
         val db = FirebaseFirestore.getInstance()
         db.collection("posts")
@@ -225,12 +232,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
     }
 
+    // auto complete on search
     private fun setupAutocomplete(view: View) {
-        val locationInput = view.findViewById<AutoCompleteTextView>(R.id.map_search_input)
+        val locationInput = view.findViewById<AutoCompleteTextView>(R.id.map_search_input) // text search
+
+        // init google api
         val placesClient = Places.createClient(requireContext())
         val token = AutocompleteSessionToken.newInstance()
+
+        // map connect between name and placeId
         val placeIdMap = mutableMapOf<String, String>()
 
+        // adapter
+        // performFiltering- send text to autoComplete
+        // publishResults- render view in list
+        // getItem/ getCount- return place name
         val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line) {
             val suggestions = mutableListOf<String>()
 
@@ -271,8 +287,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
+        // connect field to adapter
         locationInput.setAdapter(adapter)
 
+        // get placeId
         locationInput.setOnItemClickListener { _, _, position, _ ->
             val selected = adapter.getItem(position) ?: return@setOnItemClickListener
             val placeId = placeIdMap[selected] ?: return@setOnItemClickListener
@@ -283,6 +301,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     val place = response.place
                     val latLng = place.latLng
                     if (latLng != null) {
+                        // add marker
                         mMap?.addMarker(MarkerOptions().position(latLng).title(place.name))
                         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
                     }

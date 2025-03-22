@@ -84,8 +84,7 @@
                 android:id="@+id/like_button"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/ic_heart_outline"
- />
+                android:src="@drawable/ic_heart_outline" />
 
             <TextView
                 android:id="@+id/like_count"

@@ -37,7 +37,7 @@ import java.io.FileOutputStream
 
 class ProfileFragment : Fragment() {
 
-  private lateinit var recyclerView: RecyclerView
+  private lateinit var recyclerView: RecyclerView // posts
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
   private lateinit var profilePostAdapter: ProfilePostAdapter
 
@@ -47,11 +47,6 @@ class ProfileFragment : Fragment() {
 
   private var userDocListener: ListenerRegistration? = null
 
-  private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-    uri?.let {
-      uploadProfilePicture(it)
-    }
-  }
   override fun onResume() {
     super.onResume()
     fetchPosts()
@@ -87,6 +82,7 @@ class ProfileFragment : Fragment() {
       fetchPosts()
     }
 
+    // recycler view with grid
     recyclerView = view.findViewById(R.id.recycler_view_profile)
     recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
     profilePostAdapter = ProfilePostAdapter(postList, requireContext())
@@ -107,7 +103,7 @@ class ProfileFragment : Fragment() {
     detachUserSnapshotListener()
   }
 
-
+  // listen user detailes
   private fun attachUserSnapshotListener() {
     val userId = auth.currentUser?.uid ?: return
     userDocListener = db.collection("users").document(userId)
@@ -156,13 +152,13 @@ class ProfileFragment : Fragment() {
       }
   }
 
-
+  // stop listen user detailes
   private fun detachUserSnapshotListener() {
     userDocListener?.remove()
     userDocListener = null
   }
 
-
+  // load posts
   private fun fetchPosts() {
     swipeRefreshLayout.isRefreshing = true
     val currentUserId = auth.currentUser?.uid
@@ -193,111 +189,5 @@ class ProfileFragment : Fragment() {
         Toast.makeText(requireContext(), "Failed to load posts", Toast.LENGTH_SHORT).show()
         swipeRefreshLayout.isRefreshing = false
       }
-  }
-
-
-  private fun uploadProfilePicture(imageUri: Uri) {
-    uploadImageToCloudinary(imageUri, onSuccess = { secureUrl ->
-      saveImageUrlToFirestore(secureUrl)
-      Toast.makeText(requireContext(), "Profile Picture Uploaded!", Toast.LENGTH_SHORT).show()
-    }, onFailure = { errorMsg ->
-      Toast.makeText(requireContext(), "Upload Failed: $errorMsg", Toast.LENGTH_SHORT).show()
-    })
-  }
-
-
-  private fun saveImageUrlToFirestore(imageUrl: String) {
-    val userId = auth.currentUser?.uid ?: return
-    db.collection("users").document(userId)
-      .update("profileImageUrl", imageUrl)
-      .addOnSuccessListener {
-        Toast.makeText(requireContext(), "Profile Updated!", Toast.LENGTH_SHORT).show()
-      }
-      .addOnFailureListener {
-        Toast.makeText(requireContext(), "Failed to update profile: ${it.message}", Toast.LENGTH_SHORT).show()
-      }
-  }
-
-
-  private fun uploadImageToCloudinary(
-    imageUri: Uri,
-    onSuccess: (String) -> Unit,
-    onFailure: (String) -> Unit
-  ) {
-
-    val localImagePath = saveImageLocally(imageUri)
-    if (localImagePath == null) {
-      onFailure("Failed to save image locally")
-      return
-    }
-
-    val file = File(localImagePath)
-    if (!file.exists()) {
-      onFailure("File does not exist at: $localImagePath")
-      return
-    }
-
-    val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-    val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
-
-    val preset="post_pictures_preset"
-    val presetRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), preset)
-
-    val cloudName = "dkogrec1q" // Replace with your Cloudinary Cloud Name
-    val call = CloudinaryService.api.uploadImage(cloudName, filePart, presetRequestBody)
-
-    call.enqueue(object : Callback<CloudinaryUploadResponse> {
-      override fun onResponse(
-        call: Call<CloudinaryUploadResponse>,
-        response: Response<CloudinaryUploadResponse>
-      ) {
-        Log.d("profileIMAGE", "Response Code: ${response.code()}")
-        Log.d("profileIMAGE", "Response Body: ${response.body()?.secure_url}")
-
-        if (response.isSuccessful) {
-          val uploadResponse = response.body()
-          if (uploadResponse?.secure_url != null) {
-            Log.d("profileIMAGE", "Upload Success: ${uploadResponse.secure_url}")
-            onSuccess(uploadResponse.secure_url)
-          } else {
-            Log.e("profileIMAGE", "Upload success but no URL returned")
-            onFailure("Upload succeeded but no URL returned")
-          }
-        } else {
-          val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-          Log.e("profileIMAGE", "Upload failed: $errorMessage")
-          onFailure("Upload failed: $errorMessage")
-        }
-      }
-
-      override fun onFailure(call: Call<CloudinaryUploadResponse>, t: Throwable) {
-        Log.e("profileIMAGE", "Upload failed: ${t.message}")
-        onFailure("Upload failed: ${t.message}")
-      }
-    })
-  }
-
-
-
-  private fun saveImageLocally(uri: Uri): String? {
-    return try {
-      val inputStream = requireContext().contentResolver.openInputStream(uri)
-      inputStream?.let {
-        val picturesDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val appDir = File(picturesDir, "mymykoImages")
-        if (!appDir.exists()) {
-          appDir.mkdirs()
-        }
-        val file = File(appDir, "profile_${System.currentTimeMillis()}.jpg")
-        val outputStream = FileOutputStream(file)
-        it.copyTo(outputStream)
-        it.close()
-        outputStream.close()
-        file.absolutePath
-      }
-    } catch (e: Exception) {
-      Log.e("ProfileFragment", "Failed to save image locally: ${e.message}")
-      null
-    }
   }
 }

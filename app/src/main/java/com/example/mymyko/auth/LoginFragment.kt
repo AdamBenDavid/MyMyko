@@ -19,83 +19,98 @@ import com.google.firebase.firestore.QuerySnapshot
 import androidx.lifecycle.ViewModelProvider
 import com.example.mymyko.R
 
-
 class LoginFragment : Fragment() {
-  private lateinit var auth: FirebaseAuth
-  private lateinit var userViewModel: UserViewModel
-  private val db = FirebaseFirestore.getInstance()
-  private var _binding: FragmentLoginBinding? = null
-  private val binding get() = _binding!!
+    private lateinit var auth: FirebaseAuth // fireBase manager
+    private lateinit var userViewModel: UserViewModel // save user in Room (local db)
+    private val db = FirebaseFirestore.getInstance()
+    private var _binding: FragmentLoginBinding? = null // get view from xml
+    private val binding get() = _binding!!
 
-  override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    _binding = FragmentLoginBinding.inflate(inflater, container, false)
-    auth = FirebaseAuth.getInstance()
-    checkIfLoggedIn()
+    override fun onCreateView(
+          inflater: LayoutInflater, container: ViewGroup?,
+          savedInstanceState: Bundle?
+        ): View {
+          _binding = FragmentLoginBinding.inflate(inflater, container, false)
+          auth = FirebaseAuth.getInstance()
+          checkIfLoggedIn()
 
-    binding.submit.setOnClickListener {
-      val email = binding.email.text.toString()
-      val password = binding.password.text.toString()
-      if (email.isEmpty() || password.isEmpty()) {
-        Toast.makeText(requireContext(), "Email and Password cannot be empty", Toast.LENGTH_SHORT).show()
-        return@setOnClickListener
-      }
-      handleLogin(email, password)
-    }
+          // click on submit button
+          binding.submit.setOnClickListener {
+            val email = binding.email.text.toString()
+            val password = binding.password.text.toString()
 
-    binding.registerButton.setOnClickListener {
-      findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-    }
-
-    return binding.root
-  }
-
-  private fun handleLogin(email: String, password: String) {
-    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) {
-      if (it.isSuccessful) {
-        Toast.makeText(requireActivity(), "Successfully Logged In", Toast.LENGTH_SHORT).show()
-        val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-        val repository = UserRepository(userDao)
-        val factory = UserViewModelFactory(repository)
-        userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
-        fetchUserData(email)
-      } else {
-        Toast.makeText(requireActivity(), "Log In failed", Toast.LENGTH_SHORT).show()
-      }
-    }
-  }
-
-  private fun fetchUserData(email: String) {
-    db.collection("users").whereEqualTo("email", email).get()
-      .addOnSuccessListener { documents: QuerySnapshot ->
-        if (!documents.isEmpty) {
-          val user = documents.documents[0].toObject(User::class.java)
-          user?.let {
-            storeUser(it.copy(imageBlob = null))
-          }
+            // if there is user login
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Email and Password cannot be empty",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            // if there is not user login
+            handleLogin(email, password)
         }
-      }
-  }
 
-  private fun storeUser(user: User) {
-    userViewModel.addUser(user)
-    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-  }
+        // navigate to register
+        binding.registerButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
 
-  private fun checkIfLoggedIn() {
-    val currentUser = FirebaseAuth.getInstance().currentUser
-    if (currentUser != null) {
-      val navController = findNavController()
-      if (navController.currentDestination?.id == R.id.loginFragment) {
-        navController.navigate(R.id.action_loginFragment_to_homeFragment)
-      }
+        return binding.root
     }
-  }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-  }
+    // login with Firebase
+    private fun handleLogin(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) {
+            // save user in local db with ROOM
+            if (it.isSuccessful) {
+                Toast.makeText(requireActivity(), "Successfully Logged In", Toast.LENGTH_SHORT)
+                    .show()
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao() //get ROOM
+                val repository = UserRepository(userDao) // get DAO from ROOM object
+                val factory = UserViewModelFactory(repository)
+                userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+                fetchUserData(email) // get user from firestore by email
+            } else {
+                Toast.makeText(requireActivity(), "Log In failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // get user from firestore by email
+    private fun fetchUserData(email: String) {
+        db.collection("users").whereEqualTo("email", email).get()
+            .addOnSuccessListener { documents: QuerySnapshot ->
+                if (!documents.isEmpty) {
+                    val user = documents.documents[0].toObject(User::class.java) // convert to user
+                    user?.let {
+                        storeUser(it.copy(imageBlob = null))
+                    }
+                }
+            }
+    }
+
+    // save user in Room
+    private fun storeUser(user: User) {
+        userViewModel.addUser(user)
+        findNavController().navigate(R.id.action_loginFragment_to_homeFragment) //navigate to hove fragment
+    }
+
+    // if user already logged in
+    private fun checkIfLoggedIn() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) { // if yes, skip login page
+            val navController = findNavController()
+            if (navController.currentDestination?.id == R.id.loginFragment) {
+                navController.navigate(R.id.action_loginFragment_to_homeFragment)
+            }
+        }
+    }
+
+    // clean binding when close the window to prevent memory leaks
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

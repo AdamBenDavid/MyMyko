@@ -22,12 +22,17 @@ class LogoutFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
+    // logout from firebase
     Firebase.auth.signOut()
+
+    //delete user from ROOM
     val userDao = AppDatabase.getDatabase(requireContext()).userDao()
     val repository = UserRepository(userDao)
     val factory = UserViewModelFactory(repository)
     userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
     userViewModel.logout()
+
+    //navigate to login page
     findNavController().navigate(R.id.action_logoutFragment_to_loginFragment)
     return inflater.inflate(R.layout.fragment_logout, container, false)
   }

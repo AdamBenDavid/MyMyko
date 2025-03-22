@@ -7,23 +7,23 @@ import retrofit2.http.*
 
 interface CloudinaryApi {
 
-    // Endpoint for image uploads.
+    // POST request to cloudinary to upload picture
     @Multipart
     @POST("v1_1/{cloudName}/image/upload")
     fun uploadImage(
         @Path("cloudName") cloudName: String,
-        @Part file: MultipartBody.Part,
-        @Part("upload_preset") uploadPreset: RequestBody
+        @Part file: MultipartBody.Part, // picture
+        @Part("upload_preset") uploadPreset: RequestBody // upload without authentication
     ): Call<CloudinaryUploadResponse>
 
-    // Endpoint for deleting an image.
+    // POST request to cloudinary to delete image
     @FormUrlEncoded
     @POST("v1_1/{cloudName}/image/destroy")
     fun deleteImage(
         @Path("cloudName") cloudName: String,
-        @Field("public_id") publicId: String,
+        @Field("public_id") publicId: String, // picture id to delete
         @Field("timestamp") timestamp: Long,
         @Field("signature") signature: String,
         @Field("api_key") apiKey: String
-    ): Call<CloudinaryUploadResponse>
+    ): Call<CloudinaryUploadResponse> // show cloudinary response
 }

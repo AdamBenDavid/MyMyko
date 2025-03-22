@@ -21,13 +21,12 @@ import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
 
-  private lateinit var userViewModel: UserViewModel
   private lateinit var recyclerView: RecyclerView
   private var postList = mutableListOf<Post>()
   private lateinit var postAdapter: PostAdapter
   private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-
+  // botton nav fragment
   fun renderNav(user: User) {
     Log.d("HomeFragment", "Rendering BottomNavFragment for user: ${user.firstname} ${user.lastname}")
     val childFragment = BottomNavFragment()
@@ -41,6 +40,7 @@ class HomeFragment : Fragment() {
       .commit()
   }
 
+  // get post from firestore
   private fun fetchPosts() {
     swipeRefreshLayout.isRefreshing = true
     FirebaseFirestore.getInstance().collection("posts")
@@ -65,7 +65,8 @@ class HomeFragment : Fragment() {
       }
   }
 
-
+  //get user
+  // identity from firebase Auth and get user from firestore
   private fun fetchCurrentUserAndRenderNav() {
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
     if (currentUserId == null) {
@@ -101,7 +102,6 @@ class HomeFragment : Fragment() {
       }
   }
 
-
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
@@ -116,12 +116,13 @@ class HomeFragment : Fragment() {
     postAdapter = PostAdapter(postList, requireContext())
     recyclerView.adapter = postAdapter
 
-    fetchPosts()
-    fetchCurrentUserAndRenderNav()
+    fetchPosts() // get posts
+    fetchCurrentUserAndRenderNav() // get user
 
     return view
   }
 
+  // when back to this page- render posts
   override fun onResume() {
     super.onResume()
     Log.d("HomeFragment", "onResume")

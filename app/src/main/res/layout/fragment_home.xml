@@ -8,11 +8,6 @@
     tools:context=".HomeFragment"
     android:background="@color/background_color">
 
-  <!-- Title at top -->
-
-
-  <!-- SwipeRefresh + RecyclerView -->
-
   <ImageView
       android:id="@+id/logo"
       android:layout_width="290dp"
@@ -42,7 +37,6 @@
         android:paddingTop="0dp" />
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-  <!-- Bottom navigation container -->
   <FrameLayout
       android:id="@+id/navbar_container"
       android:layout_width="match_parent"
