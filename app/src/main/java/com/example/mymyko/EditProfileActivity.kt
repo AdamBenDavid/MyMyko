@@ -7,17 +7,15 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mymyko.cloudinary.CloudinaryService
+import com.example.mymyko.cloudinary.CloudinaryUploadResponse
+import com.example.mymyko.databinding.ActivityEditProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import com.example.mymyko.cloudinary.CloudinaryService
-import com.example.mymyko.cloudinary.CloudinaryUploadResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -29,14 +27,8 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 
 class EditProfileActivity : AppCompatActivity() {
-  // variables without init
-  private lateinit var profileImageView: ImageView
-  private lateinit var etFirstName: EditText
-  private lateinit var etLastName: EditText
-  private lateinit var etEmail: EditText
-  private lateinit var etLocation: EditText
-  private lateinit var btnSave: Button
-  private lateinit var btnCancel: Button
+
+  private lateinit var binding: ActivityEditProfileBinding
 
   private val auth = FirebaseAuth.getInstance()
   private val db = FirebaseFirestore.getInstance()
@@ -44,44 +36,34 @@ class EditProfileActivity : AppCompatActivity() {
   private var selectedImageUri: Uri? = null
   private var oldProfileImageUrl: String? = null
 
-  // pick image
   private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
     uri?.let {
       selectedImageUri = it
-      profileImageView.setImageURI(it)
+      binding.editProfileImage.setImageURI(it)
     }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.fragment_edit_profile)
-    supportActionBar?.apply { // design
+    binding = ActivityEditProfileBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    supportActionBar?.apply {
       title = "Edit Profile"
       setDisplayHomeAsUpEnabled(true)
     }
 
-    // get objects
-    profileImageView = findViewById(R.id.edit_profile_image)
-    etFirstName = findViewById(R.id.edit_et_firstname)
-    etLastName = findViewById(R.id.edit_et_lastname)
-    etEmail = findViewById(R.id.edit_et_email)
-    etLocation = findViewById(R.id.edit_et_location)
-    btnSave = findViewById(R.id.edit_btn_save)
-    btnCancel = findViewById(R.id.edit_btn_cancel)
+    loadCurrentProfile()
 
-    loadCurrentProfile() // load user from firestore
-
-    profileImageView.setOnClickListener {
+    binding.editProfileImage.setOnClickListener {
       pickImageLauncher.launch("image/*")
     }
 
-    // save edits
-    btnSave.setOnClickListener {
+    binding.editBtnSave.setOnClickListener {
       saveProfile()
     }
 
-    // cancel
-    btnCancel.setOnClickListener {
+    binding.editBtnCancel.setOnClickListener {
       setResult(RESULT_CANCELED)
       finish()
     }
@@ -92,12 +74,12 @@ class EditProfileActivity : AppCompatActivity() {
     db.collection("users").document(userId).get()
       .addOnSuccessListener { document ->
         if (document.exists()) {
-          etFirstName.setText(document.getString("firstname") ?: "")
-          etLastName.setText(document.getString("lastname") ?: "")
-          etEmail.setText(document.getString("email") ?: "")
+          binding.editEtFirstname.setText(document.getString("firstname") ?: "")
+          binding.editEtLastname.setText(document.getString("lastname") ?: "")
+          binding.editEtEmail.setText(document.getString("email") ?: "")
           val city = document.getString("city") ?: ""
           val country = document.getString("country") ?: ""
-          etLocation.setText(if (city.isNotEmpty() && country.isNotEmpty()) "$city, $country" else country)
+          binding.editEtLocation.setText(if (city.isNotEmpty() && country.isNotEmpty()) "$city, $country" else country)
 
           val profileImageUrl = document.getString("profileImageUrl")
           oldProfileImageUrl = profileImageUrl
@@ -115,17 +97,17 @@ class EditProfileActivity : AppCompatActivity() {
                   com.squareup.picasso.MemoryPolicy.NO_CACHE,
                   com.squareup.picasso.MemoryPolicy.NO_STORE
                 )
-                .into(profileImageView)
+                .into(binding.editProfileImage)
             } else {
               val bitmap = BitmapFactory.decodeFile(profileImageUrl)
               if (bitmap != null) {
-                profileImageView.setImageBitmap(bitmap)
+                binding.editProfileImage.setImageBitmap(bitmap)
               } else {
-                profileImageView.setImageResource(R.drawable.profile_icon)
+                binding.editProfileImage.setImageResource(R.drawable.profile_icon)
               }
             }
           } else {
-            profileImageView.setImageResource(R.drawable.profile_icon)
+            binding.editProfileImage.setImageResource(R.drawable.profile_icon)
           }
         }
       }
@@ -134,13 +116,12 @@ class EditProfileActivity : AppCompatActivity() {
       }
   }
 
-  // save edits
   private fun saveProfile() {
     val userId = auth.currentUser?.uid ?: return
-    val updatedFirstName = etFirstName.text.toString().trim()
-    val updatedLastName = etLastName.text.toString().trim()
-    val updatedEmail = etEmail.text.toString().trim()
-    val updatedLocation = etLocation.text.toString().trim()
+    val updatedFirstName = binding.editEtFirstname.text.toString().trim()
+    val updatedLastName = binding.editEtLastname.text.toString().trim()
+    val updatedEmail = binding.editEtEmail.text.toString().trim()
+    val updatedLocation = binding.editEtLocation.text.toString().trim()
     val locationParts = updatedLocation.split(",").map { it.trim() }
     val updatedCity: String
     val updatedCountry: String
@@ -183,7 +164,7 @@ class EditProfileActivity : AppCompatActivity() {
             com.squareup.picasso.MemoryPolicy.NO_CACHE,
             com.squareup.picasso.MemoryPolicy.NO_STORE
           )
-          .into(profileImageView)
+          .into(binding.editProfileImage)
       }, onFailure = { errorMsg ->
         Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show()
       })
@@ -192,7 +173,6 @@ class EditProfileActivity : AppCompatActivity() {
     }
   }
 
-  // save updates to firestore
   private fun updateProfileInFirestore(userId: String, updates: Map<String, Any>) {
     Log.d("EditProfileActivity", "Updating Firestore with: $updates")
     db.collection("users").document(userId)
@@ -217,8 +197,6 @@ class EditProfileActivity : AppCompatActivity() {
       }
   }
 
-  // upload image to cloudinary
-  // steps- local and then cloudinary
   private fun uploadImageToCloudinary(
     imageUri: Uri,
     onSuccess: (String) -> Unit,
@@ -259,7 +237,6 @@ class EditProfileActivity : AppCompatActivity() {
     })
   }
 
-  // step1- save image local
   private fun saveImageLocally(uri: Uri): String? {
     return try {
       val inputStream = contentResolver.openInputStream(uri)
@@ -282,7 +259,6 @@ class EditProfileActivity : AppCompatActivity() {
     }
   }
 
-  // delete old image
   private fun deleteOldImage(oldImageUrl: String) {
     val publicId = getPublicId(oldImageUrl)
     if (publicId == null) {
@@ -294,7 +270,7 @@ class EditProfileActivity : AppCompatActivity() {
     val signatureData = "public_id=$publicId&timestamp=$timestamp"
     val signature = sha1(signatureData + apiSecret)
 
-    CloudinaryService.api.deleteImage( "dkogrec1q",publicId, timestamp, signature, "296316728133841")
+    CloudinaryService.api.deleteImage("dkogrec1q", publicId, timestamp, signature, "296316728133841")
       .enqueue(object : Callback<CloudinaryUploadResponse> {
         override fun onResponse(call: Call<CloudinaryUploadResponse>, response: Response<CloudinaryUploadResponse>) {
           if (response.isSuccessful) {
@@ -341,7 +317,6 @@ class EditProfileActivity : AppCompatActivity() {
         finish()
         true
       }
-
       else -> super.onOptionsItemSelected(item)
     }
   }

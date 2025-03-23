@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mymyko.cloudinary.CloudinaryService
 import com.example.mymyko.cloudinary.CloudinaryUploadResponse
+import com.example.mymyko.databinding.FragmentUploadBinding
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
@@ -41,7 +42,9 @@ class UploadFragment : Fragment() {
     private var selectedPlaceName: String? = null
     private var selectedPlaceLatLng: Pair<Double, Double>? = null
 
-    //picking an image
+    private var _binding: FragmentUploadBinding? = null
+    private val binding get() = _binding!!
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
@@ -50,12 +53,10 @@ class UploadFragment : Fragment() {
             }
         }
 
-    // Opens the gallery to pick an image
     private fun openGallery() {
         pickImageLauncher.launch("image/*")
     }
 
-    // Saves the picked image locally before uploading to Cloudinary
     private fun saveImageLocally(uri: Uri): String? {
         return try {
             val inputStream = requireContext().contentResolver.openInputStream(uri)
@@ -79,7 +80,6 @@ class UploadFragment : Fragment() {
         }
     }
 
-    // Uploads the local file to Cloudinary
     private fun uploadImageToCloudinary(
         imageUri: Uri,
         onSuccess: (String) -> Unit,
@@ -133,11 +133,9 @@ class UploadFragment : Fragment() {
         })
     }
 
-    // Uploads the post data (image URL + description) to Firestore
     private fun uploadPost(imageUri: Uri, description: String) {
         val userId = auth.currentUser?.uid ?: return
 
-        // First upload the selected image to Cloudinary
         uploadImageToCloudinary(
             imageUri,
             onSuccess = { secureUrl ->
@@ -149,7 +147,6 @@ class UploadFragment : Fragment() {
         )
     }
 
-    // Saves the post to Firestore
     private fun savePostToFirestore(imageUrl: String, description: String) {
         val userId = auth.currentUser?.uid ?: return
 
@@ -161,12 +158,9 @@ class UploadFragment : Fragment() {
             "likes" to 0,
             "likedUsers" to emptyList<String>(),
             "comments" to emptyList<String>(),
-
-            //  Add place details if there are any
             "place_name" to (selectedPlaceName ?: ""),
             "place_lat" to (selectedPlaceLatLng?.first ?: 0.0),
             "place_lng" to (selectedPlaceLatLng?.second ?: 0.0)
-
         )
 
         db.collection("posts").add(post)
@@ -189,7 +183,8 @@ class UploadFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_upload, container, false)
+        _binding = FragmentUploadBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         setHasOptionsMenu(true)
         (activity as AppCompatActivity).supportActionBar?.apply {
@@ -197,8 +192,6 @@ class UploadFragment : Fragment() {
             title = "Upload Post"
         }
 
-        // Bottom Nav Integration:
-        // Make sure you have a container (FrameLayout) in fragment_upload.xml with id = navbar_container
         val childFragment = BottomNavFragment()
         val bundle = Bundle()
         bundle.putString("current_page", "upload")
@@ -207,14 +200,13 @@ class UploadFragment : Fragment() {
             .replace(R.id.navbar_container, childFragment)
             .commit()
 
-        // Buttons
-        view.findViewById<Button>(R.id.upload_button).setOnClickListener {
+        binding.uploadButton.setOnClickListener {
             openGallery()
         }
 
-        view.findViewById<Button>(R.id.share).setOnClickListener {
+        binding.share.setOnClickListener {
             val descriptionInput =
-                view.findViewById<TextInputLayout>(R.id.description).editText?.text.toString()
+                binding.description.editText?.text.toString()
             if (selectedImageUri == null) {
                 Toast.makeText(requireContext(), "Please select an image first", Toast.LENGTH_SHORT)
                     .show()
@@ -222,23 +214,27 @@ class UploadFragment : Fragment() {
                 uploadPost(selectedImageUri!!, descriptionInput)
             }
         }
+
         val apiKey = getString(R.string.google_places_api_key)
         if (!Places.isInitialized()) {
             Places.initialize(requireContext().applicationContext, apiKey)
         }
 
-        setupAutocomplete(view)
+        setupAutocomplete(binding.root)
         return view
     }
 
-    // Handle the back arrow in the action bar
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 findNavController().navigateUp()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -247,8 +243,6 @@ class UploadFragment : Fragment() {
         val locationInput = view.findViewById<AutoCompleteTextView>(R.id.location_input)
         val placesClient = Places.createClient(requireContext())
         val token = AutocompleteSessionToken.newInstance()
-
-        // Move `placeIdMap` outside so it's accessible later
         val placeIdMap = mutableMapOf<String, String>()
 
         val adapter = object : ArrayAdapter<String>(
@@ -274,11 +268,11 @@ class UploadFragment : Fragment() {
                             val response = Tasks.await(task)
 
                             suggestions.clear()
-                            placeIdMap.clear()  // Clear old results
+                            placeIdMap.clear()
                             response.autocompletePredictions.forEach {
                                 val fullText = it.getFullText(null).toString()
                                 suggestions.add(fullText)
-                                placeIdMap[fullText] = it.placeId  // Store Place ID
+                                placeIdMap[fullText] = it.placeId
                             }
 
                             results.values = suggestions
@@ -299,7 +293,6 @@ class UploadFragment : Fragment() {
 
         locationInput.setAdapter(adapter)
 
-
         locationInput.setOnItemClickListener { _, _, position, _ ->
             val selectedPlace = locationInput.adapter.getItem(position) as String
             val placeId = placeIdMap[selectedPlace]
@@ -312,12 +305,9 @@ class UploadFragment : Fragment() {
                     .addOnSuccessListener { response ->
                         val place = response.place
                         val latLng = place.latLng
-
-                        // save to db the place data:
                         selectedPlaceName = place.name
                         selectedPlaceLatLng = latLng?.let { Pair(it.latitude, it.longitude) }
                         Log.d("Place Selected", "Saved: ${place.name} at $latLng")
-
                     }
                     .addOnFailureListener { e ->
                         Log.e("Place Error", "Could not fetch place: ${e.message}")
@@ -325,6 +315,4 @@ class UploadFragment : Fragment() {
             }
         }
     }
-
-
 }

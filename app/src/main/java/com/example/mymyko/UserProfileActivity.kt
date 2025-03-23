@@ -14,17 +14,12 @@ import com.example.mymyko.adapters.UserPostsAdapter
 import com.example.mymyko.data.models.Post
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import de.hdodenhof.circleimageview.CircleImageView
-import android.widget.TextView
 import com.google.firebase.firestore.Query
+import com.example.mymyko.databinding.ActivityUserProfileBinding
 
 class UserProfileActivity : AppCompatActivity() {
 
-  private lateinit var ivProfile: CircleImageView
-  private lateinit var tvUserName: TextView
-  private lateinit var tvEmail: TextView
-  private lateinit var tvLocation: TextView
-  private lateinit var rvUserPosts: RecyclerView
+  private lateinit var binding: ActivityUserProfileBinding
 
   private val EDIT_PROFILE_REQUEST = 1001
   private var currentUserId: String = ""
@@ -33,13 +28,8 @@ class UserProfileActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_user_profile)
-
-    ivProfile = findViewById(R.id.ivProfile)
-    tvUserName = findViewById(R.id.tvUserName)
-    tvEmail = findViewById(R.id.tvEmail)
-    tvLocation = findViewById(R.id.tvLocation)
-    rvUserPosts = findViewById(R.id.rvUserPosts)
+    binding = ActivityUserProfileBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     currentUserId = intent.getStringExtra("userId") ?: ""
     if (currentUserId.isEmpty()) {
@@ -62,7 +52,6 @@ class UserProfileActivity : AppCompatActivity() {
     detachUserDocumentListener()
   }
 
-  // Attach a real-time listener to the user document.
   private fun attachUserDocumentListener() {
     userDocListener = FirebaseFirestore.getInstance()
       .collection("users")
@@ -73,7 +62,6 @@ class UserProfileActivity : AppCompatActivity() {
           return@addSnapshotListener
         }
         if (snapshot != null && snapshot.exists()) {
-          // Extract user fields from the snapshot.
           val firstName = snapshot.getString("firstname") ?: ""
           val lastName = snapshot.getString("lastname") ?: ""
           val email = snapshot.getString("email") ?: "No email"
@@ -85,13 +73,11 @@ class UserProfileActivity : AppCompatActivity() {
       }
   }
 
-  // Detach the listener when the activity is no longer visible.
   private fun detachUserDocumentListener() {
     userDocListener?.remove()
     userDocListener = null
   }
 
-  // Update the UI components with the user’s data.
   private fun updateProfileUI(
     firstName: String,
     lastName: String,
@@ -100,18 +86,17 @@ class UserProfileActivity : AppCompatActivity() {
     country: String,
     profileImageUrl: String
   ) {
-    tvUserName.text = "$firstName $lastName"
-    tvEmail.text = email
-    tvLocation.text = if (city.isNotEmpty() && country.isNotEmpty()) "$city, $country" else country
+    binding.tvUserName.text = "$firstName $lastName"
+    binding.tvEmail.text = email
+    binding.tvLocation.text = if (city.isNotEmpty() && country.isNotEmpty()) "$city, $country" else country
 
     if (profileImageUrl.isNotEmpty()) {
       updateProfileImage(profileImageUrl)
     } else {
-      ivProfile.setImageResource(R.drawable.profile_icon)
+      binding.ivProfile.setImageResource(R.drawable.profile_icon)
     }
   }
 
-  // Force Glide to load a fresh image (bypassing cache) using a timestamp and signature.
   private fun updateProfileImage(imageUrl: String) {
     val separator = if (imageUrl.contains("?")) "&" else "?"
     Glide.with(this)
@@ -121,24 +106,21 @@ class UserProfileActivity : AppCompatActivity() {
       .skipMemoryCache(true)
       .placeholder(R.drawable.profile_icon)
       .error(R.drawable.profile_icon)
-      .into(ivProfile)
+      .into(binding.ivProfile)
   }
 
-  // Handle the result from EditProfileActivity.
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == EDIT_PROFILE_REQUEST && resultCode == RESULT_OK) {
       val newImageUrl = data?.getStringExtra("profileImageUrl")
       Log.d("UserProfileActivity", "Received image URL from edit: $newImageUrl")
       if (!newImageUrl.isNullOrEmpty()) {
-        // Clear Glide's cache for the image view and force an update.
-        Glide.with(this).clear(ivProfile)
+        Glide.with(this).clear(binding.ivProfile)
         updateProfileImage(newImageUrl)
       }
     }
   }
 
-  // Load posts (one-off fetch).
   private fun loadUserPosts(userId: String) {
     FirebaseFirestore.getInstance().collection("posts")
       .whereEqualTo("user_id", userId)
@@ -150,8 +132,8 @@ class UserProfileActivity : AppCompatActivity() {
           val post = document.toObject(Post::class.java)
           posts.add(post)
         }
-        rvUserPosts.layoutManager = LinearLayoutManager(this)
-        rvUserPosts.adapter = UserPostsAdapter(posts, this)
+        binding.rvUserPosts.layoutManager = LinearLayoutManager(this)
+        binding.rvUserPosts.adapter = UserPostsAdapter(posts, this)
       }
       .addOnFailureListener { e ->
         Toast.makeText(this, "Failed to load user's posts: ${e.message}", Toast.LENGTH_SHORT).show()
