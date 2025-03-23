@@ -8,6 +8,7 @@
     tools:context=".HomeFragment"
     android:background="@color/background_color">
 
+
   <!-- Title at top -->
   <TextView
       android:id="@+id/title"
@@ -40,6 +41,7 @@
         android:paddingBottom="32dp"
         android:paddingTop="0dp" />
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
   <!-- Bottom navigation container -->
   <FrameLayout
