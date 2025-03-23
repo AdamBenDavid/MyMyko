@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.mymyko.R
 import com.example.mymyko.data.models.Post
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.mymyko.cloudinary.CloudinaryService

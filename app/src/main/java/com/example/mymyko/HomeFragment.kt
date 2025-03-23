@@ -9,24 +9,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.mymyko.adapters.PostAdapter
 import com.example.mymyko.data.local.User
 import com.example.mymyko.data.models.Post
-import com.example.mymyko.viewmodel.UserViewModel
+import com.example.mymyko.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
 
-  private lateinit var recyclerView: RecyclerView
+  private var _binding: FragmentHomeBinding? = null
+  private val binding get() = _binding!!
+
   private var postList = mutableListOf<Post>()
   private lateinit var postAdapter: PostAdapter
-  private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-  // botton nav fragment
   fun renderNav(user: User) {
     Log.d("HomeFragment", "Rendering BottomNavFragment for user: ${user.firstname} ${user.lastname}")
     val childFragment = BottomNavFragment()
@@ -40,9 +38,8 @@ class HomeFragment : Fragment() {
       .commit()
   }
 
-  // get post from firestore
   private fun fetchPosts() {
-    swipeRefreshLayout.isRefreshing = true
+    binding.swipeRefreshLayout.isRefreshing = true
     FirebaseFirestore.getInstance().collection("posts")
       .orderBy("timestamp", Query.Direction.DESCENDING)
       .get()
@@ -50,23 +47,21 @@ class HomeFragment : Fragment() {
         postList.clear()
         for (document in documents) {
           val post = document.toObject(Post::class.java).copy(
-            id = document.id,  // Ensure we include Firestore document ID
+            id = document.id,
             place_name = document.getString("place_name") ?: "Unknown Location",
           )
           postList.add(post)
         }
         postAdapter.notifyDataSetChanged()
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
       }
       .addOnFailureListener { exception ->
         Log.e("HomeFragment", "Error fetching posts", exception)
         Toast.makeText(requireContext(), "Failed to load posts", Toast.LENGTH_SHORT).show()
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
       }
   }
 
-  //get user
-  // identity from firebase Auth and get user from firestore
   private fun fetchCurrentUserAndRenderNav() {
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
     if (currentUserId == null) {
@@ -106,23 +101,26 @@ class HomeFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    val view = inflater.inflate(R.layout.fragment_home, container, false)
+    _binding = FragmentHomeBinding.inflate(inflater, container, false)
+    val view = binding.root
 
-    swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
-    swipeRefreshLayout.setOnRefreshListener { fetchPosts() }
+    binding.swipeRefreshLayout.setOnRefreshListener { fetchPosts() }
 
-    recyclerView = view.findViewById(R.id.recycler_view)
-    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
     postAdapter = PostAdapter(postList, requireContext())
-    recyclerView.adapter = postAdapter
+    binding.recyclerView.adapter = postAdapter
 
-    fetchPosts() // get posts
-    fetchCurrentUserAndRenderNav() // get user
+    fetchPosts()
+    fetchCurrentUserAndRenderNav()
 
     return view
   }
 
-  // when back to this page- render posts
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+  }
+
   override fun onResume() {
     super.onResume()
     Log.d("HomeFragment", "onResume")

@@ -101,26 +101,27 @@
             android:layout_weight="1"
             android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:id="@+id/or_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"
-            android:textSize="14sp"
-            android:textColor="@color/gray"
-            android:padding="8dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/or_text"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="OR"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textColor="@color/gray"-->
+<!--            android:padding="8dp"/>-->
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@android:color/darker_gray"/>
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@android:color/darker_gray"/>-->
       </LinearLayout>
-      <com.google.android.gms.common.SignInButton
-          android:id="@+id/google_sign_in_button"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"/>
+
+<!--      <com.google.android.gms.common.SignInButton-->
+<!--          android:id="@+id/google_sign_in_button"-->
+<!--          android:layout_width="match_parent"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:layout_marginTop="8dp"/>-->
 
       <TextView
           android:id="@+id/register_button"
